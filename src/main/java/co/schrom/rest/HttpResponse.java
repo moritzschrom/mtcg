@@ -1,36 +1,28 @@
 package co.schrom.rest;
 
-import java.io.OutputStream;
+import lombok.Getter;
+
+import java.io.BufferedWriter;
 import java.util.Map;
 
 public class HttpResponse implements HttpResponseInterface {
-    @Override
-    public void writeOutputStream(OutputStream outputStream) {
+    @Getter
+    String version;
 
-    }
+    @Getter
+    int statusCode;
 
-    @Override
-    public String getVersion() {
-        return null;
-    }
+    @Getter
+    String reasonPhrase;
 
-    @Override
-    public int getStatusCode() {
-        return 0;
-    }
+    @Getter
+    Map<String, String> headers;
 
-    @Override
-    public String getReasonPhrase() {
-        return null;
-    }
+    @Getter
+    String body;
 
     @Override
-    public Map<String, String> getHeaders() {
-        return null;
-    }
+    public void write(BufferedWriter writer) {
 
-    @Override
-    public String getBody() {
-        return null;
     }
 }

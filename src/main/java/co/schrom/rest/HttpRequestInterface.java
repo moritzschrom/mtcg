@@ -1,10 +1,10 @@
 package co.schrom.rest;
 
-import java.io.InputStream;
+import java.io.BufferedReader;
 import java.util.Map;
 
 public interface HttpRequestInterface {
-    void readInputStream(InputStream inputStream);
+    void read(BufferedReader reader);
 
     String getVersion();
 

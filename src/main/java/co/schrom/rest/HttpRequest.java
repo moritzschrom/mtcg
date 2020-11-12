@@ -2,7 +2,7 @@ package co.schrom.rest;
 
 import lombok.Getter;
 
-import java.io.InputStream;
+import java.io.BufferedReader;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -26,7 +26,7 @@ public class HttpRequest implements HttpRequestInterface {
     String body;
 
     @Override
-    public void readInputStream(InputStream inputStream) {
+    public void read(BufferedReader reader) {
 
     }
 }

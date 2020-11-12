@@ -1,10 +1,10 @@
 package co.schrom.rest;
 
-import java.io.OutputStream;
+import java.io.BufferedWriter;
 import java.util.Map;
 
 public interface HttpResponseInterface {
-    void writeOutputStream(OutputStream outputStream);
+    void write(BufferedWriter writer);
 
     String getVersion();
 

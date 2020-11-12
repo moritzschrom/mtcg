@@ -1,14 +1,16 @@
 package co.schrom.rest;
 
 import lombok.SneakyThrows;
-import org.apache.commons.io.IOUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
-import java.io.InputStream;
+
+import java.io.BufferedReader;
+import java.io.StringReader;
 import java.util.HashMap;
 import java.util.Map;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class HttpRequestTest {
     HttpRequest httpRequest;
@@ -20,18 +22,18 @@ public class HttpRequestTest {
 
     @SneakyThrows
     @Test
-    @DisplayName("Initialize the request with an InputStream")
+    @DisplayName("Initialize the request with a BufferedReader")
     void testReadInputStream() {
         // arrange
-        InputStream inputStream = IOUtils.toInputStream("POST /messages?param=value HTTP/1.1\n" +
+        BufferedReader reader = new BufferedReader(new StringReader("POST /messages?param=value HTTP/1.1\n" +
                 "Host: localhost\n" +
                 "Key: Value\n" +
                 "Content-Type: text/html; charset=UTF-8\n" +
                 "\n" +
-                "My Message", "UTF-8");
+                "My Message"));
 
         // act
-        httpRequest.readInputStream(inputStream);
+        httpRequest.read(reader);
 
         // assert
         assertEquals(httpRequest.getMethod(), "POST");
