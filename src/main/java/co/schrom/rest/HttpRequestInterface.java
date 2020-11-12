@@ -12,6 +12,8 @@ public interface HttpRequestInterface {
 
     String getPath();
 
+    Map<String, String> getParams();
+
     Map<String, String> getHeaders();
 
     String getBody();
