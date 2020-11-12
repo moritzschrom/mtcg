@@ -4,7 +4,7 @@ import java.io.InputStream;
 import java.util.Map;
 
 public interface HttpRequestInterface {
-    void readStream(InputStream inputStream);
+    void readInputStream(InputStream inputStream);
 
     String getVersion();
 

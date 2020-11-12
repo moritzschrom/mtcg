@@ -4,7 +4,7 @@ import java.io.OutputStream;
 import java.util.Map;
 
 public interface HttpResponseInterface {
-    void writeStream(OutputStream outputStream);
+    void writeOutputStream(OutputStream outputStream);
 
     String getVersion();
 

@@ -5,7 +5,7 @@ import java.util.Map;
 
 public class HttpRequest implements HttpRequestInterface {
     @Override
-    public void readStream(InputStream inputStream) {
+    public void readInputStream(InputStream inputStream) {
 
     }
 

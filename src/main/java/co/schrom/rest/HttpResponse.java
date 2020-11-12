@@ -5,7 +5,7 @@ import java.util.Map;
 
 public class HttpResponse implements HttpResponseInterface {
     @Override
-    public void writeStream(OutputStream outputStream) {
+    public void writeOutputStream(OutputStream outputStream) {
 
     }
 
