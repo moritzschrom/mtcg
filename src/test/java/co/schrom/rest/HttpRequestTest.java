@@ -13,17 +13,17 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class HttpRequestTest {
-    HttpRequest httpRequest;
+    HttpRequest request;
 
     @BeforeEach
     void beforeEach() {
-        httpRequest = new HttpRequest();
+        request = new HttpRequest();
     }
 
     @SneakyThrows
     @Test
     @DisplayName("Initialize the request with a BufferedReader")
-    void testReadInputStream() {
+    void testRead() {
         // arrange
         BufferedReader reader = new BufferedReader(new StringReader("POST /messages?param=value HTTP/1.1\n" +
                 "Host: localhost\n" +
@@ -34,26 +34,26 @@ public class HttpRequestTest {
                 "Second Line"));
 
         // act
-        httpRequest.read(reader);
+        request.read(reader);
 
         // assert
-        assertEquals("POST", httpRequest.getMethod());
+        assertEquals("POST", request.getMethod());
 
-        assertEquals("/messages", httpRequest.getPath()); // Parameters should be removed
+        assertEquals("/messages", request.getPath()); // Parameters should be removed
 
         Map<String, String> expectedParams = new HashMap<>();
         expectedParams.put("param", "value");
-        assertEquals(expectedParams, httpRequest.getParams());
+        assertEquals(expectedParams, request.getParams());
 
-        assertEquals("HTTP/1.1", httpRequest.getVersion());
+        assertEquals("HTTP/1.1", request.getVersion());
 
         Map<String, String> expectedHeaders = new HashMap<>();
         expectedHeaders.put("Host", "localhost");
         expectedHeaders.put("Key", "Value");
         expectedHeaders.put("Content-Type", "text/html; charset=UTF-8");
-        assertEquals(expectedHeaders, httpRequest.getHeaders());
+        assertEquals(expectedHeaders, request.getHeaders());
 
-        assertEquals("My Message\nSecond Line\n", httpRequest.getBody());
+        assertEquals("My Message\nSecond Line\n", request.getBody());
     }
 
 }
