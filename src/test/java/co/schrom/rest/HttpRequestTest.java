@@ -30,29 +30,30 @@ public class HttpRequestTest {
                 "Key: Value\n" +
                 "Content-Type: text/html; charset=UTF-8\n" +
                 "\n" +
-                "My Message"));
+                "My Message\n" +
+                "Second Line"));
 
         // act
         httpRequest.read(reader);
 
         // assert
-        assertEquals(httpRequest.getMethod(), "POST");
+        assertEquals("POST", httpRequest.getMethod());
 
-        assertEquals(httpRequest.getPath(), "/messages"); // Parameters should be removed
+        assertEquals("/messages", httpRequest.getPath()); // Parameters should be removed
 
         Map<String, String> expectedParams = new HashMap<>();
         expectedParams.put("param", "value");
-        assertEquals(httpRequest.getParams(), expectedParams);
+        assertEquals(expectedParams, httpRequest.getParams());
 
-        assertEquals(httpRequest.getVersion(), "HTTP/1.1");
+        assertEquals("HTTP/1.1", httpRequest.getVersion());
 
         Map<String, String> expectedHeaders = new HashMap<>();
         expectedHeaders.put("Host", "localhost");
         expectedHeaders.put("Key", "Value");
         expectedHeaders.put("Content-Type", "text/html; charset=UTF-8");
-        assertEquals(httpRequest.getHeaders(), expectedHeaders);
+        assertEquals(expectedHeaders, httpRequest.getHeaders());
 
-        assertEquals(httpRequest.getBody(), "My Message");
+        assertEquals("My Message\nSecond Line\n", httpRequest.getBody());
     }
 
 }
