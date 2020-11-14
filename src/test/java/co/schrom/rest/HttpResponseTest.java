@@ -47,13 +47,14 @@ public class HttpResponseTest {
         // arrange
         BufferedWriter writerMock = mock(BufferedWriter.class);
 
-        response.version = "HTTP/1.1";
-        response.statusCode = 200;
-        response.reasonPhrase = "OK";
-        response.headers.put("Accept", "text/plain");
-        String body = "My message";
-        response.body = body;
-        response.headers.put("Content-Length", Integer.toString(body.getBytes().length));
+        HttpResponse response = HttpResponse.builder()
+                .version("HTTP/1.1")
+                .statusCode(200)
+                .reasonPhrase("OK")
+                .header("Accept", "text/plain")
+                .header("Content-Length", Integer.toString("My message".getBytes().length))
+                .body("My message")
+                .build();
 
         // act
         response.write(writerMock);
@@ -61,9 +62,62 @@ public class HttpResponseTest {
         // assert
         String expectedResponse = "HTTP/1.1 200 OK\n" +
                 "Accept: text/plain\n" +
-                "Content-Length: " + body.getBytes().length + "\n" +
+                "Content-Length: " + "My message".getBytes().length + "\n" +
                 "\n" +
                 "My message";
+        verify(writerMock).write(expectedResponse);
+    }
+
+    @SneakyThrows
+    @Test
+    @DisplayName("Write a response without body to a BufferedWriter")
+    void testWrite__noBody() {
+        // arrange
+        BufferedWriter writerMock = mock(BufferedWriter.class);
+
+        HttpResponse response = HttpResponse.builder()
+                .version("HTTP/1.1")
+                .statusCode(200)
+                .reasonPhrase("OK")
+                .build();
+
+        // act
+        response.write(writerMock);
+
+        // assert
+        String expectedResponse = "HTTP/1.1 200 OK";
+        verify(writerMock).write(expectedResponse);
+    }
+
+    @SneakyThrows
+    @Test
+    @DisplayName("Get a default NotImplemented response")
+    void testNotImplemented() {
+        // arrange
+        BufferedWriter writerMock = mock(BufferedWriter.class);
+
+        // act
+        HttpResponse notImplemented = HttpResponse.notImplemented();
+        notImplemented.write(writerMock);
+
+        // assert
+        String expectedResponse = "HTTP/1.1 501 Not Implemented";
+        verify(writerMock).write(expectedResponse);
+    }
+
+    @SneakyThrows
+    @Test
+    @DisplayName("Get a default OK response")
+    void testOK() {
+        // arrange
+        BufferedWriter writerMock = mock(BufferedWriter.class);
+
+        // act
+        HttpResponse ok = HttpResponse.ok();
+        ok.write(writerMock);
+
+        // assert
+        String expectedResponse = "HTTP/1.1 200 OK";
         verify(writerMock).write(expectedResponse);
     }
 }
