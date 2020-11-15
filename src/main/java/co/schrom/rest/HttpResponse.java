@@ -32,7 +32,7 @@ public class HttpResponse implements HttpResponseInterface {
 
     @Getter
     @Builder.Default
-    String body = "";
+    String body = " ";
 
     public HttpResponse() {
         this.headers = new HashMap<>();
@@ -46,7 +46,6 @@ public class HttpResponse implements HttpResponseInterface {
 
     @Override
     public void write(BufferedWriter writer) {
-        System.out.println(body);
         if (!headers.containsKey("Content-Length")) {
             headers.put("Content-Length", (body != null && body.length() > 0) ? Integer.toString(body.getBytes().length) : "0");
         }
@@ -71,8 +70,6 @@ public class HttpResponse implements HttpResponseInterface {
             }
             sb.setLength(sb.length() - 2);
 
-            System.out.println(sb.toString());
-
             String[] lines = sb.toString().split("\r\n");
 
             writer.newLine();
@@ -90,6 +87,7 @@ public class HttpResponse implements HttpResponseInterface {
         return HttpResponse.builder()
                 .statusCode(500)
                 .reasonPhrase("Internal Server Error")
+                .body("Internal Server Error")
                 .build();
     }
 
@@ -97,6 +95,7 @@ public class HttpResponse implements HttpResponseInterface {
         return HttpResponse.builder()
                 .statusCode(501)
                 .reasonPhrase("Not Implemented")
+                .body("Not Implemented")
                 .build();
     }
 
@@ -104,6 +103,7 @@ public class HttpResponse implements HttpResponseInterface {
         return HttpResponse.builder()
                 .statusCode(404)
                 .reasonPhrase("Not Found")
+                .body("Not Found")
                 .build();
     }
 
@@ -111,6 +111,7 @@ public class HttpResponse implements HttpResponseInterface {
         return HttpResponse.builder()
                 .statusCode(200)
                 .reasonPhrase("OK")
+                .body("OK")
                 .build();
     }
 }

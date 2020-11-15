@@ -25,7 +25,6 @@ public class MessageServlet extends HttpServlet {
     @Override
     public HttpResponseInterface handlePut(HttpRequestInterface request) {
         return HttpResponse.builder().body("handlePut()").build();
-
     }
 
     @Override
