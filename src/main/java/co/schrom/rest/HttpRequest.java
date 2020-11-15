@@ -37,10 +37,19 @@ public class HttpRequest implements HttpRequestInterface {
     public void read(BufferedReader reader) {
         try {
             StringBuilder sb = new StringBuilder();
+            int s;
+
+            while ((s = reader.read()) != -1) {
+                sb.append((char) s);
+                if (!reader.ready()) break;
+            }
+
+            String[] lines = sb.toString().split("\n");
+            sb = new StringBuilder();
             int lineCount = 0;
             boolean contentReached = false;
 
-            for (String line = reader.readLine(); line != null; line = reader.readLine()) {
+            for (String line : lines) {
                 // First line
                 if (lineCount == 0) {
                     String[] segments = line.split(" ");
@@ -50,6 +59,7 @@ public class HttpRequest implements HttpRequestInterface {
 
                         // Path: /path?param1=value1&param2=value2
                         // Non-escaped RegEx: ([^\n\r\?]+)(\??)(.*)
+                        // noinspection RegExpRedundantEscape
                         Matcher m = Pattern.compile("([^\\n\\r\\?]+)(?:\\??)(.*)").matcher(segments[1]);
                         // Group 1: /path
                         if (m.matches() && m.groupCount() >= 1) {
@@ -72,7 +82,7 @@ public class HttpRequest implements HttpRequestInterface {
                 }
 
                 // Headers
-                else if (!contentReached && !"".equals(line)) {
+                else if (!contentReached && !"\n".equals(line) && !"\r".equals(line)) {
                     String[] segments = line.split(": ");
                     if (segments.length == 2) {
                         headers.put(segments[0].trim(), segments[1].trim());
@@ -82,9 +92,10 @@ public class HttpRequest implements HttpRequestInterface {
                 // Body
                 else {
                     contentReached = true;
-                    if (!"".equals(line)) {
+                    if (!"\n".equals(line) && !"\r".equals(line)) {
                         sb.append(line).append("\n");
                         body = sb.toString(); // Rewrite the body after every new line
+                        body = body.substring(0, body.length() - 1); // Remove the last \n
                     }
                 }
 

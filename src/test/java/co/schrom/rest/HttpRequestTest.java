@@ -29,7 +29,7 @@ public class HttpRequestTest {
                 "Host: localhost\n" +
                 "Key: Value\n" +
                 "Content-Type: text/html; charset=UTF-8\n" +
-                "\n" +
+                "\r\n" +
                 "My Message\n" +
                 "Second Line"));
 
@@ -53,7 +53,7 @@ public class HttpRequestTest {
         expectedHeaders.put("Content-Type", "text/html; charset=UTF-8");
         assertEquals(expectedHeaders, request.getHeaders());
 
-        assertEquals("My Message\nSecond Line\n", request.getBody());
+        assertEquals("My Message\nSecond Line", request.getBody());
     }
 
 }

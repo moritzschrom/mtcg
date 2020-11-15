@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-public class RestService implements RestServiceInterface {
+public class RestService implements RestServiceInterface, Runnable {
     private static RestService instance;
 
     @Getter
@@ -24,9 +24,11 @@ public class RestService implements RestServiceInterface {
 
     @Override
     public void listen(int port) {
+        Runtime.getRuntime().addShutdownHook(new Thread(new RestService()));
+
         try {
             listener = new ServerSocket(port, 5);
-            //noinspection InfiniteLoopStatement
+            // noinspection InfiniteLoopStatement
             while (true) {
                 Socket socket = listener.accept();
                 Thread thread = new Thread(() -> new RequestContext(socket));
@@ -44,5 +46,15 @@ public class RestService implements RestServiceInterface {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void run() {
+        try {
+            listener.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        listener = null;
     }
 }

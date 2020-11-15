@@ -8,10 +8,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.io.BufferedWriter;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class HttpResponseTest {
@@ -47,12 +48,16 @@ public class HttpResponseTest {
         // arrange
         BufferedWriter writerMock = mock(BufferedWriter.class);
 
+        Map<String, String> headers = new HashMap<>() {{
+            put("Accept", "text/plain");
+            put("Content-Length", Integer.toString("My message".getBytes().length));
+        }};
+
         HttpResponse response = HttpResponse.builder()
                 .version("HTTP/1.1")
                 .statusCode(200)
                 .reasonPhrase("OK")
-                .header("Accept", "text/plain")
-                .header("Content-Length", Integer.toString("My message".getBytes().length))
+                .headers(headers)
                 .body("My message")
                 .build();
 
@@ -60,12 +65,11 @@ public class HttpResponseTest {
         response.write(writerMock);
 
         // assert
-        String expectedResponse = "HTTP/1.1 200 OK\n" +
-                "Accept: text/plain\n" +
-                "Content-Length: " + "My message".getBytes().length + "\n" +
-                "\n" +
-                "My message";
-        verify(writerMock).write(expectedResponse);
+        verify(writerMock, atLeastOnce()).newLine();
+        verify(writerMock).write("HTTP/1.1 200 OK");
+        verify(writerMock).write("Accept: text/plain");
+        verify(writerMock).write("Content-Length: " + "My message".getBytes().length);
+        verify(writerMock).write("My message");
     }
 
     @SneakyThrows
