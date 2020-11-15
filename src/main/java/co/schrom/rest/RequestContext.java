@@ -29,12 +29,12 @@ public class RequestContext implements RequestContextInterface {
         request = new HttpRequest();
         routes = new HashMap<>() {{
             try {
-                put("^GET /messages/\\d/?$", MessageServlet.class.getDeclaredMethod("handleGet", HttpRequestInterface.class));
+                put("^GET /messages/\\d+/?$", MessageServlet.class.getDeclaredMethod("handleGet", HttpRequestInterface.class));
                 put("^GET /messages/?$", MessageServlet.class.getDeclaredMethod("handleIndex", HttpRequestInterface.class));
                 put("^POST /messages/?$", MessageServlet.class.getDeclaredMethod("handlePost", HttpRequestInterface.class));
-                put("^PUT /messages/\\d/?$", MessageServlet.class.getDeclaredMethod("handlePut", HttpRequestInterface.class));
-                put("^PATCH /messages/\\d/?$", MessageServlet.class.getDeclaredMethod("handlePatch", HttpRequestInterface.class));
-                put("^DELETE /messages/\\d/?$", MessageServlet.class.getDeclaredMethod("handleDelete", HttpRequestInterface.class));
+                put("^PUT /messages/\\d+/?$", MessageServlet.class.getDeclaredMethod("handlePut", HttpRequestInterface.class));
+                put("^PATCH /messages/\\d+/?$", MessageServlet.class.getDeclaredMethod("handlePatch", HttpRequestInterface.class));
+                put("^DELETE /messages/\\d+/?$", MessageServlet.class.getDeclaredMethod("handleDelete", HttpRequestInterface.class));
             } catch (NoSuchMethodException e) {
                 e.printStackTrace();
             }
