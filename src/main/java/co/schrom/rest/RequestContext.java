@@ -33,7 +33,6 @@ public class RequestContext implements RequestContextInterface {
                 put("^GET /messages/?$", MessageServlet.class.getDeclaredMethod("handleIndex", HttpRequestInterface.class));
                 put("^POST /messages/?$", MessageServlet.class.getDeclaredMethod("handlePost", HttpRequestInterface.class));
                 put("^PUT /messages/\\d+/?$", MessageServlet.class.getDeclaredMethod("handlePut", HttpRequestInterface.class));
-                put("^PATCH /messages/\\d+/?$", MessageServlet.class.getDeclaredMethod("handlePatch", HttpRequestInterface.class));
                 put("^DELETE /messages/\\d+/?$", MessageServlet.class.getDeclaredMethod("handleDelete", HttpRequestInterface.class));
             } catch (NoSuchMethodException e) {
                 e.printStackTrace();
@@ -68,8 +67,7 @@ public class RequestContext implements RequestContextInterface {
 
             BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
             response.write(writer);
-        } catch (IOException | IllegalAccessException | InvocationTargetException e) {
-            e.printStackTrace();
+        } catch (IOException | IllegalAccessException | InvocationTargetException ignored) {
         }
     }
 

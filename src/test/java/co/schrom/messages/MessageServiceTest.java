@@ -77,6 +77,21 @@ public class MessageServiceTest {
     }
 
     @Test
+    @DisplayName("Replace a message to the service")
+    void testReplaceMessages() {
+        // arrange
+        when(mockedA.getId()).thenReturn(1);
+
+        // act
+        List<MessageInterface> expectedMessages = new ArrayList<>(Arrays.asList(mockedD, mockedB, mockedC));
+        boolean returnValue = messageService.replaceMessage(1, mockedD);
+
+        // assert
+        assertTrue(returnValue);
+        assertEquals(expectedMessages, messageService.getMessages());
+    }
+
+    @Test
     @DisplayName("Remove a message from the service")
     void testRemoveMessage() {
         // arrange

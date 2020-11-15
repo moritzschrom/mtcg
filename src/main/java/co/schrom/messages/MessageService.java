@@ -9,10 +9,18 @@ public class MessageService implements MessageServiceInterface {
     @Getter
     List<MessageInterface> messages;
 
+    private int id;
+
     private static MessageService instance;
 
     private MessageService() {
+        this.id = 0;
         this.messages = new ArrayList<>();
+    }
+
+    public int nextId() {
+        id++;
+        return id;
     }
 
     @Override
@@ -28,6 +36,14 @@ public class MessageService implements MessageServiceInterface {
     @Override
     public boolean addMessage(MessageInterface message) {
         return messages.add(message);
+    }
+
+    @Override
+    public boolean replaceMessage(int id, MessageInterface message) {
+        MessageInterface old = this.getMessage(id);
+        if (old == null) return false;
+        messages.set(messages.indexOf(old), message);
+        return true;
     }
 
     @Override

@@ -32,12 +32,12 @@ public class RequestContextTest {
                 "Hallo Welt";
 
         when(socketMock.getInputStream()).thenReturn(new ByteArrayInputStream(request.getBytes()));
-        when(socketMock.getOutputStream()).thenReturn(new ByteArrayOutputStream());
+        when(socketMock.getOutputStream()).thenReturn(new ByteArrayOutputStream(64));
 
         // act
         new RequestContext(socketMock);
 
         // assert
-        verify(socketMock).getOutputStream();
+        verify(socketMock).getInputStream();
     }
 }

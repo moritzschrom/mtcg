@@ -9,5 +9,9 @@ public interface MessageServiceInterface {
 
     boolean addMessage(MessageInterface message);
 
+    boolean replaceMessage(int id, MessageInterface message);
+
     boolean removeMessage(int id);
+
+    int nextId();
 }
