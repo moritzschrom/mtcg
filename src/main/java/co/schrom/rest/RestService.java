@@ -51,7 +51,8 @@ public class RestService implements RestServiceInterface, Runnable {
     @Override
     public void run() {
         try {
-            listener.close();
+            if (listener != null)
+                listener.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
