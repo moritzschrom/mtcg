@@ -7,11 +7,9 @@ public interface MessageServiceInterface {
 
     List<MessageInterface> getMessages();
 
-    boolean addMessage(MessageInterface message);
+    MessageInterface addMessage(MessageInterface message);
 
-    boolean replaceMessage(int id, MessageInterface message);
+    MessageInterface updateMessage(int id, MessageInterface message);
 
-    boolean removeMessage(int id);
-
-    int nextId();
+    boolean deleteMessage(int id);
 }
