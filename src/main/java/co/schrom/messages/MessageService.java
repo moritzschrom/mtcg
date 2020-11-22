@@ -115,7 +115,7 @@ public class MessageService implements MessageServiceInterface {
                 return null;
             }
 
-            return this.getMessage(message.getId());
+            return this.getMessage(id);
         } catch (SQLException e) {
             e.printStackTrace();
         }
