@@ -1,0 +1,7 @@
+DROP TABLE IF EXISTS messages;
+CREATE TABLE messages
+(
+    id      INTEGER AUTO_INCREMENT PRIMARY KEY,
+    message VARCHAR(255) NULL
+);
+
