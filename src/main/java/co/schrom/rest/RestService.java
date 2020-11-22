@@ -12,22 +12,16 @@ public class RestService implements RestServiceInterface, Runnable {
     @Getter
     ServerSocket listener;
 
-    private RestService() {
+    private int port;
+
+    public RestService(int port) {
+        this.port = port;
     }
 
-    public static RestService getInstance() {
-        if (RestService.instance == null) {
-            RestService.instance = new RestService();
-        }
-        return RestService.instance;
-    }
-
-    @Override
-    public void listen(int port) {
-        Runtime.getRuntime().addShutdownHook(new Thread(new RestService()));
-
+    public void listen() {
         try {
             listener = new ServerSocket(port, 5);
+            System.out.println("Listening on port " + listener.getLocalPort() + "...");
             // noinspection InfiniteLoopStatement
             while (true) {
                 Socket socket = listener.accept();
@@ -41,6 +35,7 @@ public class RestService implements RestServiceInterface, Runnable {
 
     @Override
     public void close() {
+        System.out.println("Closing on port " + listener.getLocalPort() + "...");
         try {
             listener.close();
         } catch (IOException e) {
@@ -50,12 +45,7 @@ public class RestService implements RestServiceInterface, Runnable {
 
     @Override
     public void run() {
-        try {
-            if (listener != null)
-                listener.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        listener = null;
+        Runtime.getRuntime().addShutdownHook(new Thread(this::close));
+        listen();
     }
 }
