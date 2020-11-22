@@ -13,7 +13,7 @@ public class User implements UserInterface {
     String username;
 
     @Getter
-    String passwordHash;
+    String password;
 
     @Override
     public boolean authorize(String password) {
@@ -22,6 +22,6 @@ public class User implements UserInterface {
                 .hashString(password, StandardCharsets.UTF_8)
                 .toString();
 
-        return passwordHash.equals(getPasswordHash());
+        return passwordHash.equals(getPassword());
     }
 }
