@@ -8,11 +8,13 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.io.BufferedWriter;
+import java.net.InetAddress;
 import java.util.HashMap;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 public class HttpResponseTest {
@@ -65,11 +67,12 @@ public class HttpResponseTest {
         response.write(writerMock);
 
         // assert
-        verify(writerMock, atLeastOnce()).newLine();
-        verify(writerMock).write("HTTP/1.1 200 OK");
-        verify(writerMock).write("Accept: text/plain");
-        verify(writerMock).write("Content-Length: " + "My message".getBytes().length);
-        verify(writerMock).write("My message");
+        verify(writerMock).write("HTTP/1.1 200 OK\r\n" +
+                "Accept: text/plain\r\n" +
+                "Host: " + InetAddress.getLocalHost().getHostName() + "\r\n" +
+                "Content-Length: " + "My message".getBytes().length + "\r\n" +
+                "\r\n" +
+                "My message\r\n");
     }
 
     @SneakyThrows
@@ -89,7 +92,9 @@ public class HttpResponseTest {
         response.write(writerMock);
 
         // assert
-        String expectedResponse = "HTTP/1.1 200 OK";
+        String expectedResponse = "HTTP/1.1 200 OK\r\n" +
+                "Host: " + InetAddress.getLocalHost().getHostName() + "\r\n" +
+                "Content-Length: 0\r\n\r\n";
         verify(writerMock).write(expectedResponse);
     }
 
@@ -105,7 +110,11 @@ public class HttpResponseTest {
         notImplemented.write(writerMock);
 
         // assert
-        String expectedResponse = "HTTP/1.1 501 Not Implemented";
+        String expectedResponse = "HTTP/1.1 501 Not Implemented\r\n" +
+                "Host: " + InetAddress.getLocalHost().getHostName() + "\r\n" +
+                "Content-Length: " + "Not Implemented".getBytes().length + "\r\n" +
+                "\r\n" +
+                "Not Implemented\r\n";
         verify(writerMock).write(expectedResponse);
     }
 
@@ -121,7 +130,11 @@ public class HttpResponseTest {
         ok.write(writerMock);
 
         // assert
-        String expectedResponse = "HTTP/1.1 200 OK";
+        String expectedResponse = "HTTP/1.1 200 OK\r\n" +
+                "Host: " + InetAddress.getLocalHost().getHostName() + "\r\n" +
+                "Content-Length: 2\r\n" +
+                "\r\n" +
+                "OK\r\n";
         verify(writerMock).write(expectedResponse);
     }
 }

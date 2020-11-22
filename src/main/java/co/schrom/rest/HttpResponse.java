@@ -32,7 +32,7 @@ public class HttpResponse implements HttpResponseInterface {
 
     @Getter
     @Builder.Default
-    String body = " ";
+    String body = "";
 
     public HttpResponse() {
         this.headers = new HashMap<>();
@@ -65,18 +65,12 @@ public class HttpResponse implements HttpResponseInterface {
             for (Map.Entry<String, String> entry : headers.entrySet()) {
                 sb.append(entry.getKey()).append(": ").append(entry.getValue()).append("\r\n");
             }
-            if (body != null) {
-                sb.append("\r\n").append(body).append("\r\n");
+            sb.append("\r\n");
+            if (body != null && body.length() > 0) {
+                sb.append(body).append("\r\n");
             }
-            sb.setLength(sb.length() - 2);
 
-            String[] lines = sb.toString().split("\r\n");
-
-            writer.newLine();
-            for (String line : lines) {
-                writer.write(line);
-                writer.newLine();
-            }
+            writer.write(sb.toString());
             writer.flush();
         } catch (IOException e) {
             e.printStackTrace();

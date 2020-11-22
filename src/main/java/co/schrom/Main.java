@@ -5,7 +5,8 @@ import co.schrom.rest.RestService;
 public class Main {
 
     public static void main(String[] args) {
-        RestService.getInstance().listen(8080);
+        Thread restServiceT = new Thread(new RestService(8080));
+        restServiceT.start();
     }
 
 }
