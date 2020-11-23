@@ -56,6 +56,7 @@ public class UserServiceTest {
 
             // assert
             assertEquals("user", user.getUsername());
+            assertEquals(-1, user.getId());
             assertEquals("password", user.getPassword());
         } catch (SQLException e) {
             e.printStackTrace();

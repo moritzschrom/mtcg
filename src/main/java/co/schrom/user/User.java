@@ -10,10 +10,16 @@ import java.nio.charset.StandardCharsets;
 public class User implements UserInterface {
 
     @Getter
+    int id;
+
+    @Getter
     String username;
 
     @Getter
     String password;
+
+    @Getter
+    String token;
 
     @Override
     public boolean authorize(String password) {
