@@ -74,6 +74,46 @@ public class UserServiceTest {
     }
 
     @Test
+    @DisplayName("Get a user with a valid username")
+    void testGetUserByUsername__validUsername() {
+        try {
+            // arrange
+            Connection conn = DatabaseService.getInstance().getConnection();
+            Statement sm = conn.createStatement();
+            sm.executeUpdate("INSERT INTO users(id, username, password) VALUES(-1, 'user', 'password')");
+
+            // act
+            User user = (User) userService.getUserByUsername("user");
+
+            // cleanup
+            sm.executeUpdate("DELETE FROM users WHERE id = -1");
+            sm.close();
+            conn.close();
+
+            // assert
+            assertNotNull(user);
+            assertEquals("user", user.getUsername());
+            assertEquals(-1, user.getId());
+            assertEquals("password", user.getPassword());
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    @DisplayName("Get a user with an invalid ID")
+    void testGetUserByUsername__invalidUsername() {
+        // arrange
+        String username = "04f8996da763b7a969b1028ee3007569eaf3a635486ddab211d512c85b9df8fb";
+
+        // act
+        User user = (User) userService.getUserByUsername(username);
+
+        // assert
+        assertNull(user);
+    }
+
+    @Test
     @DisplayName("Get all users")
     void testGetUsers() {
         try {

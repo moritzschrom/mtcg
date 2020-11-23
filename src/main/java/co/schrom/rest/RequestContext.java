@@ -37,6 +37,7 @@ public class RequestContext implements RequestContextInterface {
                 put("^DELETE /messages/\\d+/?$", MessageServlet.class.getDeclaredMethod("handleDelete", HttpRequestInterface.class));
 
                 put("^POST /users/?$", UserServlet.class.getDeclaredMethod("handlePost", HttpRequestInterface.class));
+                put("^POST /login/?$", UserServlet.class.getDeclaredMethod("handleLogin", HttpRequestInterface.class));
             } catch (NoSuchMethodException e) {
                 e.printStackTrace();
             }

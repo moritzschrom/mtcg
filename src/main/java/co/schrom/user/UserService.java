@@ -48,6 +48,34 @@ public class UserService implements UserServiceInterface {
     }
 
     @Override
+    public UserInterface getUserByUsername(String username) {
+        try {
+            Connection conn = DatabaseService.getInstance().getConnection();
+            PreparedStatement ps = conn.prepareStatement("SELECT id, username, password, token FROM users WHERE username=?;");
+            ps.setString(1, username);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                UserInterface user = User.builder()
+                        .id(rs.getInt(1))
+                        .username(rs.getString(2))
+                        .password(rs.getString(3))
+                        .token(rs.getString(4))
+                        .build();
+
+                rs.close();
+                ps.close();
+                conn.close();
+
+                return user;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
     public List<UserInterface> getUsers() {
         try {
             Connection conn = DatabaseService.getInstance().getConnection();

@@ -12,6 +12,7 @@ import com.google.gson.Gson;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Properties;
 
 public class UserServlet extends HttpServlet {
 
@@ -48,5 +49,25 @@ public class UserServlet extends HttpServlet {
             }
         }
         return HttpResponse.internalServerError();
+    }
+
+    public HttpResponseInterface handleLogin(HttpRequestInterface request) {
+        Properties data = g.fromJson(request.getBody(), Properties.class);
+        String username = data.getProperty("username");
+        String password = data.getProperty("password");
+        if (username != null && password != null) {
+            User user = (User) userService.getUserByUsername(username);
+            if (user.authorize(password)) {
+                return HttpResponse.builder()
+                        .statusCode(200)
+                        .reasonPhrase("OK")
+                        .headers(new HashMap<>() {{
+                            put("Content-Type", "application/json");
+                        }})
+                        .body(g.toJson(user.getToken()))
+                        .build();
+            }
+        }
+        return HttpResponse.unauthorized();
     }
 }
