@@ -1,6 +1,7 @@
 package co.schrom.rest;
 
 import co.schrom.rest.resources.MessageServlet;
+import co.schrom.rest.resources.UserServlet;
 import lombok.Getter;
 
 import java.io.*;
@@ -34,6 +35,8 @@ public class RequestContext implements RequestContextInterface {
                 put("^POST /messages/?$", MessageServlet.class.getDeclaredMethod("handlePost", HttpRequestInterface.class));
                 put("^PUT /messages/\\d+/?$", MessageServlet.class.getDeclaredMethod("handlePut", HttpRequestInterface.class));
                 put("^DELETE /messages/\\d+/?$", MessageServlet.class.getDeclaredMethod("handleDelete", HttpRequestInterface.class));
+
+                put("^POST /users/?$", UserServlet.class.getDeclaredMethod("handlePost", HttpRequestInterface.class));
             } catch (NoSuchMethodException e) {
                 e.printStackTrace();
             }

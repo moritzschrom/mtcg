@@ -35,14 +35,6 @@ curl -X POST http://localhost:8080/users --header "Content-Type: application/jso
 echo ""
 curl -X POST http://localhost:8080/users --header "Content-Type: application/json" -d "{\"username\":\"altenhof\",\"password\":\"markus\"}"
 echo ""
-echo "Should fail:"
+echo "Should fail (duplicate username):"
 curl -X POST http://localhost:8080/users --header "Content-Type: application/json" -d "{\"username\":\"schrom\",\"password\":\"password\"}"
-echo ""
-echo "2.2) List all users"
-echo "Should fail:"
-curl http://localhost:8080/users
-echo ""
-echo "2.3) Delete user with ID 1"
-echo "Should fail:"
-curl -X DELETE http://localhost:8080/users/1
 echo ""

@@ -6,7 +6,7 @@ import lombok.Getter;
 
 import java.nio.charset.StandardCharsets;
 
-@Builder
+@Builder(toBuilder = true)
 public class User implements UserInterface {
 
     @Getter
@@ -23,7 +23,7 @@ public class User implements UserInterface {
 
     @Override
     public boolean authorize(String password) {
-        @SuppressWarnings("UnstableApiUsage")
+        //noinspection UnstableApiUsage
         String passwordHash = Hashing.sha256()
                 .hashString(password, StandardCharsets.UTF_8)
                 .toString();
