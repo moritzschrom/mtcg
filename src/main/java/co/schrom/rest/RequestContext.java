@@ -1,6 +1,7 @@
 package co.schrom.rest;
 
 import co.schrom.rest.resources.MessageServlet;
+import co.schrom.rest.resources.UserServlet;
 import lombok.Getter;
 
 import java.io.*;
@@ -34,6 +35,11 @@ public class RequestContext implements RequestContextInterface {
                 put("^POST /messages/?$", MessageServlet.class.getDeclaredMethod("handlePost", HttpRequestInterface.class));
                 put("^PUT /messages/\\d+/?$", MessageServlet.class.getDeclaredMethod("handlePut", HttpRequestInterface.class));
                 put("^DELETE /messages/\\d+/?$", MessageServlet.class.getDeclaredMethod("handleDelete", HttpRequestInterface.class));
+
+                put("^POST /users/?$", UserServlet.class.getDeclaredMethod("handlePost", HttpRequestInterface.class));
+                put("^GET /users/\\d+/?$", UserServlet.class.getDeclaredMethod("handleGet", HttpRequestInterface.class));
+                put("^DELETE /users/\\d+/?$", UserServlet.class.getDeclaredMethod("handleDelete", HttpRequestInterface.class));
+                put("^POST /login/?$", UserServlet.class.getDeclaredMethod("handleLogin", HttpRequestInterface.class));
             } catch (NoSuchMethodException e) {
                 e.printStackTrace();
             }
@@ -48,6 +54,7 @@ public class RequestContext implements RequestContextInterface {
             // Read the InputStream
             BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             request.read(reader);
+            request.authorizeRequest();
 
             // Resolve the method for the route
             Method method = resolveRoute(request);

@@ -108,4 +108,20 @@ public class HttpResponse implements HttpResponseInterface {
                 .body("OK")
                 .build();
     }
+
+    public static HttpResponse unauthorized() {
+        return HttpResponse.builder()
+                .statusCode(401)
+                .reasonPhrase("Unauthorized")
+                .body("Unauthorized")
+                .build();
+    }
+
+    public static HttpResponse forbidden() {
+        return HttpResponse.builder()
+                .statusCode(403)
+                .reasonPhrase("Forbidden")
+                .body("Forbidden")
+                .build();
+    }
 }
