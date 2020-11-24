@@ -116,4 +116,12 @@ public class HttpResponse implements HttpResponseInterface {
                 .body("Unauthorized")
                 .build();
     }
+
+    public static HttpResponse forbidden() {
+        return HttpResponse.builder()
+                .statusCode(403)
+                .reasonPhrase("Forbidden")
+                .body("Forbidden")
+                .build();
+    }
 }

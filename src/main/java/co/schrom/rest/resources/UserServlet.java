@@ -13,14 +13,18 @@ import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Properties;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class UserServlet extends HttpServlet {
 
     UserService userService;
     Gson g;
+    Pattern p;
 
     public UserServlet() {
         g = new Gson();
+        p = Pattern.compile("/users/(\\d+)/?");
         this.userService = UserService.getInstance();
     }
 
@@ -30,7 +34,26 @@ public class UserServlet extends HttpServlet {
             return HttpResponse.unauthorized();
         }
 
-        return HttpResponse.internalServerError();
+        Matcher m = p.matcher(request.getPath());
+        if (m.matches()) {
+            int id = Integer.parseInt(m.group(1));
+            if (request.getAuthUser().getId() != id) {
+                return HttpResponse.forbidden();
+            }
+            User user = (User) userService.getUser(id);
+            // Hide password and token in REST response.
+            user = user.toBuilder().password(null).token(null).build();
+
+            if (user != null) {
+                return HttpResponse.builder()
+                        .headers(new HashMap<>() {{
+                            put("Content-Type", "application/json");
+                        }})
+                        .body(g.toJson(user))
+                        .build();
+            }
+        }
+        return HttpResponse.notFound();
     }
 
     @Override
