@@ -43,3 +43,7 @@ curl -X POST http://localhost:8080/login --header "Content-Type: application/jso
 echo ""
 echo "Should fail (wrong password):"
 curl -X POST http://localhost:8080/login --header "Content-Type: application/json" -d "{\"username\":\"schrom\",\"password\":\"password\"}"
+echo ""
+echo "2.3) Get user moritz"
+echo "Should fail (not authorized)"
+curl http://localhost:8080/users/1 --header "Content-Type: application/json"

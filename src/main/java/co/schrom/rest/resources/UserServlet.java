@@ -25,6 +25,15 @@ public class UserServlet extends HttpServlet {
     }
 
     @Override
+    public HttpResponseInterface handleGet(HttpRequestInterface request) {
+        if (request.getAuthUser() == null) {
+            return HttpResponse.unauthorized();
+        }
+
+        return HttpResponse.internalServerError();
+    }
+
+    @Override
     public HttpResponseInterface handlePost(HttpRequestInterface request) {
         User user = g.fromJson(request.getBody(), User.class);
 
@@ -33,7 +42,7 @@ public class UserServlet extends HttpServlet {
             //noinspection UnstableApiUsage
             user = (User) userService.addUser(
                     user.toBuilder()
-                            .token(Hashing.sha256().hashString(user.getUsername() + new Date().getTime() + Math.random(), StandardCharsets.UTF_8).toString())
+                            .token(user.getUsername() + "_" + Hashing.sha256().hashString(user.getUsername() + new Date().getTime() + Math.random(), StandardCharsets.UTF_8).toString())
                             .password(Hashing.sha256().hashString(user.getPassword(), StandardCharsets.UTF_8).toString())
                             .build());
 

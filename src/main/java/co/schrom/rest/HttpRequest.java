@@ -1,5 +1,8 @@
 package co.schrom.rest;
 
+import co.schrom.user.User;
+import co.schrom.user.UserInterface;
+import co.schrom.user.UserService;
 import lombok.Getter;
 
 import java.io.BufferedReader;
@@ -27,6 +30,9 @@ public class HttpRequest implements HttpRequestInterface {
 
     @Getter
     String body;
+
+    @Getter
+    UserInterface authUser;
 
     public HttpRequest() {
         this.params = new HashMap<>();
@@ -105,4 +111,20 @@ public class HttpRequest implements HttpRequestInterface {
             e.printStackTrace();
         }
     }
+
+    @Override
+    public void authorizeRequest() {
+        String authorizationHeader = headers.get("Authorization");
+        if (authorizationHeader != null) {
+            String token = authorizationHeader.replace("Basic ", "");
+            String[] parts = token.split("_");
+            if (parts.length == 2) {
+                User user = (User) UserService.getInstance().getUserByUsername(parts[0]);
+                if (user != null && token.equals(user.getToken())) {
+                    authUser = user;
+                }
+            }
+        }
+    }
+
 }

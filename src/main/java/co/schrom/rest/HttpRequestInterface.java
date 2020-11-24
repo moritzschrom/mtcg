@@ -1,5 +1,7 @@
 package co.schrom.rest;
 
+import co.schrom.user.UserInterface;
+
 import java.io.BufferedReader;
 import java.util.Map;
 
@@ -17,4 +19,8 @@ public interface HttpRequestInterface {
     Map<String, String> getHeaders();
 
     String getBody();
+
+    void authorizeRequest();
+
+    UserInterface getAuthUser();
 }
