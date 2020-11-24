@@ -52,3 +52,12 @@ echo "Should succeed (authenticated)"
 curl http://localhost:8080/users/1 --header "Content-Type: application/json" --header "Authorization: Basic ${TOKEN//\"}"
 echo "Should fail (authenticated but not authorized)"
 curl http://localhost:8080/users/2 --header "Content-Type: application/json" --header "Authorization: Basic ${TOKEN//\"}"
+echo "2.4) Delete user with ID 2"
+TOKEN2=$(curl -s -X POST http://localhost:8080/login --header "Content-Type: application/json" -d "{\"username\":\"kienboec\",\"password\":\"daniel\"}")
+echo "Login successful, got token: ${TOKEN2//\"}"
+echo "Should fail (not authenticated)"
+curl -X DELETE http://localhost:8080/users/2
+echo "Should fail (authenticated but not authorized)"
+curl -X DELETE http://localhost:8080/users/2 --header "Authorization: Basic ${TOKEN//\"}"
+echo "Should succeed (authenticated)"
+curl -X DELETE http://localhost:8080/users/2 --header "Authorization: Basic ${TOKEN2//\"}"

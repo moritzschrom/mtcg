@@ -83,6 +83,26 @@ public class UserServlet extends HttpServlet {
         return HttpResponse.internalServerError();
     }
 
+    public HttpResponseInterface handleDelete(HttpRequestInterface request) {
+        if (request.getAuthUser() == null) {
+            return HttpResponse.unauthorized();
+        }
+
+        Matcher m = p.matcher(request.getPath());
+        if (m.matches()) {
+            int id = Integer.parseInt(m.group(1));
+            if (request.getAuthUser().getId() != id) {
+                return HttpResponse.forbidden();
+            }
+            boolean result = userService.deleteUser(id);
+            if (result) {
+                return HttpResponse.ok();
+            }
+            return HttpResponse.internalServerError();
+        }
+        return HttpResponse.notFound();
+    }
+
     public HttpResponseInterface handleLogin(HttpRequestInterface request) {
         Properties data = g.fromJson(request.getBody(), Properties.class);
         String username = data.getProperty("username");
