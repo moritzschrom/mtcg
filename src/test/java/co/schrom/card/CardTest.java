@@ -30,6 +30,20 @@ public class CardTest {
     }
 
     @Test
+    @DisplayName("Monster cards created with the builder should be of CardType.MONSTER")
+    void testGetCardType__monsterBuilder() {
+        // arrange
+        Card monsterCard = MonsterCard.builder().build();
+
+        // act
+        CardType cardType = monsterCard.getCardType();
+
+        // assert
+        assertNotNull(cardType);
+        assertEquals(CardType.MONSTER, cardType);
+    }
+
+    @Test
     @DisplayName("Spell cards should be of CardType.SPELL")
     void testGetCardType__spell() {
         // arrange
@@ -44,10 +58,25 @@ public class CardTest {
     }
 
     @Test
+    @DisplayName("Spell cards created with the builder should be of CardType.SPELL")
+    void testGetCardType__spellBuilder() {
+        // arrange
+        Card spellCard = SpellCard.builder().build();
+
+        // act
+        CardType cardType = spellCard.getCardType();
+
+        // assert
+        assertNotNull(cardType);
+        assertEquals(CardType.SPELL, cardType);
+    }
+
+    @Test
     @DisplayName("Dragons are immune against Goblins")
     void testWinsAgainst__dragonGoblin() {
         // arrange
         Card dragon = MonsterCard.builder().name("Dragon").build();
+        System.out.println(dragon.getCardType());
         when(cardMock.getCardType()).thenReturn(CardType.MONSTER);
         when(cardMock.getName()).thenReturn("Goblin");
 
