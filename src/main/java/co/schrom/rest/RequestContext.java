@@ -7,14 +7,13 @@ import lombok.Getter;
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.net.Socket;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
 
 public class RequestContext implements RequestContextInterface {
     @Getter
-    Socket socket;
+    SocketWrapper socket;
 
     @Getter
     HttpRequest request;
@@ -25,8 +24,8 @@ public class RequestContext implements RequestContextInterface {
     @Getter
     Map<String, Method> routes;
 
-    public RequestContext(Socket socket) {
-        this.socket = socket;
+    public RequestContext(SocketWrapperInterface socket) {
+        this.socket = (SocketWrapper) socket;
         request = new HttpRequest();
         routes = new HashMap<>() {{
             try {

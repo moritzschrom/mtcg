@@ -4,10 +4,8 @@ import lombok.Getter;
 
 import java.io.IOException;
 import java.net.ServerSocket;
-import java.net.Socket;
 
 public class RestService implements RestServiceInterface, Runnable {
-    private static RestService instance;
 
     @Getter
     ServerSocket listener;
@@ -24,7 +22,8 @@ public class RestService implements RestServiceInterface, Runnable {
             System.out.println("Listening on port " + listener.getLocalPort() + "...");
             // noinspection InfiniteLoopStatement
             while (true) {
-                Socket socket = listener.accept();
+                SocketWrapper socket = new SocketWrapper(listener.accept());
+                System.out.println("New connection on port " + listener.getLocalPort() + "...");
                 Thread thread = new Thread(() -> new RequestContext(socket));
                 thread.start();
             }
