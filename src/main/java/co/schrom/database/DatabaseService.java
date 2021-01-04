@@ -7,9 +7,9 @@ import java.sql.SQLException;
 public class DatabaseService implements DatabaseServiceInterface {
     private static DatabaseService instance;
 
-    private static final String DB_URL = "jdbc:mysql://localhost/monster_trading_card_game";
-    private static final String USER = "admin";
-    private static final String PASS = "admin";
+    private static final String DB_URL = "jdbc:postgresql://localhost:5432/mtcg";
+    private static final String USER = "postgres";
+    private static final String PASS = "postgres";
 
     private DatabaseService() {
     }
