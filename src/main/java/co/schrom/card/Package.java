@@ -8,6 +8,9 @@ import java.util.List;
 @Builder
 public class Package implements PackageInterface {
     @Getter
+    int id;
+
+    @Getter
     List<CardInterface> cards;
 
     @Getter
