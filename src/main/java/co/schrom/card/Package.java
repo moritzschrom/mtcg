@@ -11,5 +11,9 @@ public class Package implements PackageInterface {
     List<CardInterface> cards;
 
     @Getter
-    int price;
+    @Builder.Default
+    int price = 5;
+
+    @Getter
+    String name;
 }

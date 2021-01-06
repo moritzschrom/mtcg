@@ -6,4 +6,6 @@ public interface PackageInterface {
     List<CardInterface> getCards();
 
     int getPrice();
+
+    String getName();
 }

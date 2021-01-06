@@ -76,7 +76,6 @@ public class CardTest {
     void testWinsAgainst__dragonGoblin() {
         // arrange
         Card dragon = MonsterCard.builder().name("Dragon").build();
-        System.out.println(dragon.getCardType());
         when(cardMock.getCardType()).thenReturn(CardType.MONSTER);
         when(cardMock.getName()).thenReturn("Goblin");
 

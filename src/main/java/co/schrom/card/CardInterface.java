@@ -1,6 +1,8 @@
 package co.schrom.card;
 
 public interface CardInterface {
+    int getId();
+
     String getName();
 
     float getDamage();

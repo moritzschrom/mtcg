@@ -193,8 +193,8 @@ public class UserServiceTest {
             sm.executeUpdate("DELETE FROM users WHERE username = '" + username + "';");
             sm.close();
             conn.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
+        } catch (SQLException ignored) {
+
         }
     }
 

@@ -8,6 +8,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public abstract class Card implements CardInterface {
     @Getter
+    int id;
+
+    @Getter
     String name;
 
     @Getter
@@ -18,8 +21,6 @@ public abstract class Card implements CardInterface {
 
     @Override
     public boolean winsAgainst(CardInterface card) {
-
-        System.out.println(this.getCardType());
 
         // wrap MonsterCard vs MonsterCard
         if (CardType.MONSTER.equals(this.getCardType()) && CardType.MONSTER.equals(card.getCardType())) {
@@ -60,5 +61,43 @@ public abstract class Card implements CardInterface {
         }
 
         return false;
+    }
+
+    public static CardInterface fromPrimitives(int id, String name, float damage, String cardTypeString, String elementTypeString) {
+        CardType cardType;
+        ElementType elementType;
+        CardInterface card;
+
+        try {
+            cardType = CardType.valueOf(cardTypeString);
+        } catch (IllegalArgumentException e) {
+            cardType = CardType.MONSTER;
+        }
+
+        try {
+            elementType = ElementType.valueOf(elementTypeString);
+        } catch (IllegalArgumentException e) {
+            elementType = ElementType.NORMAL;
+        }
+
+        if (CardType.MONSTER.equals(cardType)) {
+            // Monster Card
+            card = MonsterCard.builder()
+                    .id(id)
+                    .name(name)
+                    .damage(damage)
+                    .elementType(elementType)
+                    .build();
+        } else {
+            // Otherwise it is a Spell Card
+            card = SpellCard.builder()
+                    .id(id)
+                    .name(name)
+                    .damage(damage)
+                    .elementType(elementType)
+                    .build();
+        }
+
+        return card;
     }
 }

@@ -124,8 +124,8 @@ public class UserService implements UserServiceInterface {
             }
             ps.close();
             conn.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
+        } catch (SQLException ignored) {
+
         }
         return null;
     }
