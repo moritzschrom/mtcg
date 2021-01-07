@@ -10,4 +10,8 @@ public interface UserInterface {
     String getToken();
 
     boolean authorize(String password);
+
+    int getCoins();
+
+    void setCoins(int coins);
 }

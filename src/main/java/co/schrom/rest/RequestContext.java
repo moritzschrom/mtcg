@@ -2,6 +2,7 @@ package co.schrom.rest;
 
 import co.schrom.rest.resources.MessageServlet;
 import co.schrom.rest.resources.PackageServlet;
+import co.schrom.rest.resources.TransactionServlet;
 import co.schrom.rest.resources.UserServlet;
 import lombok.Getter;
 
@@ -42,6 +43,8 @@ public class RequestContext implements RequestContextInterface {
                 put("^POST /login/?$", UserServlet.class.getDeclaredMethod("handleLogin", HttpRequestInterface.class));
 
                 put("^POST /packages/?$", PackageServlet.class.getDeclaredMethod("handlePost", HttpRequestInterface.class));
+
+                put("^POST /transactions/packages/?$", TransactionServlet.class.getDeclaredMethod("handleAcquirePackage", HttpRequestInterface.class));
             } catch (NoSuchMethodException e) {
                 e.printStackTrace();
             }

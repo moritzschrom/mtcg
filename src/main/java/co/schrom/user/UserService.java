@@ -51,7 +51,7 @@ public class UserService implements UserServiceInterface {
     public UserInterface getUserByUsername(String username) {
         try {
             Connection conn = DatabaseService.getInstance().getConnection();
-            PreparedStatement ps = conn.prepareStatement("SELECT id, username, password, token FROM users WHERE username=?;");
+            PreparedStatement ps = conn.prepareStatement("SELECT id, username, password, token, coins FROM users WHERE username=?;");
             ps.setString(1, username);
             ResultSet rs = ps.executeQuery();
 
@@ -61,6 +61,7 @@ public class UserService implements UserServiceInterface {
                         .username(rs.getString(2))
                         .password(rs.getString(3))
                         .token(rs.getString(4))
+                        .coins(rs.getInt(5))
                         .build();
 
                 rs.close();
@@ -107,10 +108,11 @@ public class UserService implements UserServiceInterface {
     public UserInterface addUser(UserInterface user) {
         try {
             Connection conn = DatabaseService.getInstance().getConnection();
-            PreparedStatement ps = conn.prepareStatement("INSERT INTO users(username, password, token) VALUES(?,?,?);", Statement.RETURN_GENERATED_KEYS);
+            PreparedStatement ps = conn.prepareStatement("INSERT INTO users(username, password, token, coins) VALUES(?,?,?,?);", Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, user.getUsername());
             ps.setString(2, user.getPassword());
             ps.setString(3, user.getToken());
+            ps.setInt(4, user.getCoins());
 
             int affectedRows = ps.executeUpdate();
             if (affectedRows == 0) {
@@ -135,12 +137,13 @@ public class UserService implements UserServiceInterface {
         User oldUser = (User) this.getUser(id);
         try {
             Connection conn = DatabaseService.getInstance().getConnection();
-            PreparedStatement ps = conn.prepareStatement("UPDATE users SET username = ?, password = ?, token = ? WHERE id = ?;");
+            PreparedStatement ps = conn.prepareStatement("UPDATE users SET username = ?, password = ?, token = ?, coins = ? WHERE id = ?;");
 
             ps.setString(1, user.getUsername() != null ? user.getUsername() : oldUser.getUsername());
             ps.setString(2, user.getPassword() != null ? user.getPassword() : oldUser.getPassword());
             ps.setString(3, user.getToken() != null ? user.getToken() : oldUser.getToken());
-            ps.setInt(4, id);
+            ps.setInt(4, user.getCoins());
+            ps.setInt(5, id);
 
             int affectedRows = ps.executeUpdate();
 

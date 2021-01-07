@@ -16,6 +16,7 @@ CREATE TABLE users
     username VARCHAR(255) NOT NULL,
     password VARCHAR(255) NOT NULL,
     token    VARCHAR(255) NULL,
+    coins    INT          NOT NULL DEFAULT 20,
     UNIQUE (username)
 );
 

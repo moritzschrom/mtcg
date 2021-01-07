@@ -1,6 +1,8 @@
 package co.schrom.card;
 
 import co.schrom.database.DatabaseService;
+import co.schrom.user.UserInterface;
+import co.schrom.user.UserService;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -9,8 +11,12 @@ import java.util.List;
 public class PackageService implements PackageServiceInterface {
     private static PackageService instance;
 
-    private PackageService() {
+    private UserService userService;
+    private CardService cardService;
 
+    private PackageService() {
+        userService = UserService.getInstance();
+        cardService = CardService.getInstance();
     }
 
     public static PackageService getInstance() {
@@ -36,6 +42,31 @@ public class PackageService implements PackageServiceInterface {
                         .build();
                 rs.close();
                 ps.close();
+                conn.close();
+
+                return cardPackage;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public PackageInterface getRandomPackage() {
+        try {
+            Connection conn = DatabaseService.getInstance().getConnection();
+            Statement sm = conn.createStatement();
+            ResultSet rs = sm.executeQuery("SELECT id, name, price FROM packages ORDER BY RANDOM() LIMIT 1;");
+
+            if (rs.next()) {
+                PackageInterface cardPackage = Package.builder()
+                        .id(rs.getInt(1))
+                        .name(rs.getString(2))
+                        .price(rs.getInt(3))
+                        .build();
+                rs.close();
+                sm.close();
                 conn.close();
 
                 return cardPackage;
@@ -123,5 +154,25 @@ public class PackageService implements PackageServiceInterface {
             e.printStackTrace();
         }
         return false;
+    }
+
+    @Override
+    public boolean addPackageToUser(PackageInterface cardPackage, UserInterface user) {
+        // Not enough coins
+        if (user.getCoins() < cardPackage.getPrice()) return false;
+
+        // Update coin balance
+        user.setCoins(user.getCoins() - cardPackage.getPrice());
+
+        // Save user
+        userService.updateUser(user.getId(), user);
+
+        for (CardInterface card : cardService.getCardsForPackage(cardPackage)) {
+            cardService.addCardToUser(card, user);
+        }
+
+        this.deletePackage(cardPackage.getId());
+
+        return true;
     }
 }

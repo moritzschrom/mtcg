@@ -61,6 +61,7 @@ public class UserServlet extends HttpServlet {
         User user = g.fromJson(request.getBody(), User.class);
 
         if (user != null && user.getUsername() != null && user.getPassword() != null) {
+            user.setCoins(20);
             //Generate a pseudo random token
             //noinspection UnstableApiUsage
             user = (User) userService.addUser(

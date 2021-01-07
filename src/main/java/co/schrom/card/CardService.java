@@ -1,6 +1,7 @@
 package co.schrom.card;
 
 import co.schrom.database.DatabaseService;
+import co.schrom.user.UserInterface;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -35,15 +36,22 @@ public class CardService implements CardServiceInterface {
                         rs.getFloat(3), // damage
                         rs.getString(4), // card_type
                         rs.getString(5)); // element_type
+
                 rs.close();
                 ps.close();
                 conn.close();
 
                 return card;
             }
+
+            rs.close();
+            ps.close();
+            conn.close();
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
         return null;
     }
 
@@ -66,6 +74,35 @@ public class CardService implements CardServiceInterface {
 
             rs.close();
             sm.close();
+            conn.close();
+
+            return cards;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public List<CardInterface> getCardsForPackage(PackageInterface cardPackage) {
+        try {
+            Connection conn = DatabaseService.getInstance().getConnection();
+            PreparedStatement ps = conn.prepareStatement("SELECT id, name, damage, card_type, element_type FROM cards WHERE package_id = ?;");
+            ps.setInt(1, cardPackage.getId());
+            ResultSet rs = ps.executeQuery();
+
+            List<CardInterface> cards = new ArrayList<>();
+            while (rs.next()) {
+                cards.add(Card.fromPrimitives(
+                        rs.getInt(1), // id
+                        rs.getString(2), // name
+                        rs.getFloat(3), // damage
+                        rs.getString(4), // card_type
+                        rs.getString(5))); // element_type
+            }
+
+            rs.close();
+            ps.close();
             conn.close();
 
             return cards;
@@ -141,6 +178,33 @@ public class CardService implements CardServiceInterface {
             ps.setInt(2, card.getId());
 
             int affectedRows = ps.executeUpdate();
+
+            ps.close();
+            conn.close();
+
+            if (affectedRows == 0) {
+                return null;
+            }
+            return this.getCard(card.getId());
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public CardInterface addCardToUser(CardInterface card, UserInterface user) {
+        try {
+            Connection conn = DatabaseService.getInstance().getConnection();
+            PreparedStatement ps = conn.prepareStatement("UPDATE cards SET package_id = NULL, user_id = ? WHERE id = ?;");
+            ps.setInt(1, user.getId());
+            ps.setInt(2, card.getId());
+
+            int affectedRows = ps.executeUpdate();
+
+            ps.close();
+            conn.close();
+
             if (affectedRows == 0) {
                 return null;
             }
