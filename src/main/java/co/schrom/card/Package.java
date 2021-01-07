@@ -11,7 +11,7 @@ public class Package implements PackageInterface {
     int id;
 
     @Getter
-    List<CardInterface> cards;
+    transient List<CardInterface> cards;
 
     @Getter
     @Builder.Default

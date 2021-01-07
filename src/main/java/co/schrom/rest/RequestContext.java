@@ -1,6 +1,7 @@
 package co.schrom.rest;
 
 import co.schrom.rest.resources.MessageServlet;
+import co.schrom.rest.resources.PackageServlet;
 import co.schrom.rest.resources.UserServlet;
 import lombok.Getter;
 
@@ -39,6 +40,8 @@ public class RequestContext implements RequestContextInterface {
                 put("^GET /users/\\d+/?$", UserServlet.class.getDeclaredMethod("handleGet", HttpRequestInterface.class));
                 put("^DELETE /users/\\d+/?$", UserServlet.class.getDeclaredMethod("handleDelete", HttpRequestInterface.class));
                 put("^POST /login/?$", UserServlet.class.getDeclaredMethod("handleLogin", HttpRequestInterface.class));
+
+                put("^POST /packages/?$", PackageServlet.class.getDeclaredMethod("handlePost", HttpRequestInterface.class));
             } catch (NoSuchMethodException e) {
                 e.printStackTrace();
             }

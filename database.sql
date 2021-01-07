@@ -44,6 +44,3 @@ CREATE TABLE cards
     CONSTRAINT fk_package FOREIGN KEY (package_id) REFERENCES packages (id),
     CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES users (id)
 );
-
-INSERT INTO cards(id, name, damage, element_type, card_type)
-VALUES (-1, 'WaterMonsterCard', 5, 'WATER', 'MONSTER');

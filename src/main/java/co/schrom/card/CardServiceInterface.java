@@ -9,5 +9,7 @@ public interface CardServiceInterface {
 
     CardInterface addCard(CardInterface card);
 
+    CardInterface addCardToPackage(CardInterface card, PackageInterface cardPackage);
+
     boolean deleteCard(int id);
 }

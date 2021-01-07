@@ -100,8 +100,8 @@ public class CardService implements CardServiceInterface {
             }
             ps.close();
             conn.close();
-        } catch (SQLException ignored) {
-
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
         return null;
     }
@@ -132,4 +132,22 @@ public class CardService implements CardServiceInterface {
         return false;
     }
 
+    @Override
+    public CardInterface addCardToPackage(CardInterface card, PackageInterface cardPackage) {
+        try {
+            Connection conn = DatabaseService.getInstance().getConnection();
+            PreparedStatement ps = conn.prepareStatement("UPDATE cards SET package_id = ? WHERE id = ?;");
+            ps.setInt(1, cardPackage.getId());
+            ps.setInt(2, card.getId());
+
+            int affectedRows = ps.executeUpdate();
+            if (affectedRows == 0) {
+                return null;
+            }
+            return this.getCard(card.getId());
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }
