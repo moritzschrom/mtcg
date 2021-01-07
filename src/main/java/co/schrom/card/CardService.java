@@ -84,6 +84,35 @@ public class CardService implements CardServiceInterface {
     }
 
     @Override
+    public List<CardInterface> getCardsForUser(UserInterface user) {
+        try {
+            Connection conn = DatabaseService.getInstance().getConnection();
+            PreparedStatement ps = conn.prepareStatement("SELECT id, name, damage, card_type, element_type FROM cards WHERE user_id = ?;");
+            ps.setInt(1, user.getId());
+            ResultSet rs = ps.executeQuery();
+
+            List<CardInterface> cards = new ArrayList<>();
+            while (rs.next()) {
+                cards.add(Card.fromPrimitives(
+                        rs.getInt(1), // id
+                        rs.getString(2), // name
+                        rs.getFloat(3), // damage
+                        rs.getString(4), // card_type
+                        rs.getString(5))); // element_type
+            }
+
+            rs.close();
+            ps.close();
+            conn.close();
+
+            return cards;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
     public List<CardInterface> getCardsForPackage(PackageInterface cardPackage) {
         try {
             Connection conn = DatabaseService.getInstance().getConnection();

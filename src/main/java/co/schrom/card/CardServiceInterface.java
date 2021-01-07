@@ -9,6 +9,8 @@ public interface CardServiceInterface {
 
     List<CardInterface> getCards();
 
+    List<CardInterface> getCardsForUser(UserInterface user);
+
     List<CardInterface> getCardsForPackage(PackageInterface cardPackage);
 
     CardInterface addCard(CardInterface card);
