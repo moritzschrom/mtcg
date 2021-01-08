@@ -44,6 +44,9 @@ public class RequestContext implements RequestContextInterface {
                 put("^POST /transactions/packages/?$", TransactionServlet.class.getDeclaredMethod("handleAcquirePackage", HttpRequestInterface.class));
 
                 put("^GET /cards/?$", CardServlet.class.getDeclaredMethod("handleIndex", HttpRequestInterface.class));
+
+                put("^GET /deck/?$", DeckServlet.class.getDeclaredMethod("handleIndex", HttpRequestInterface.class));
+                put("^PUT /deck/?$", DeckServlet.class.getDeclaredMethod("handlePut", HttpRequestInterface.class));
             } catch (NoSuchMethodException e) {
                 e.printStackTrace();
             }

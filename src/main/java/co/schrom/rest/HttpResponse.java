@@ -124,4 +124,12 @@ public class HttpResponse implements HttpResponseInterface {
                 .body("Forbidden")
                 .build();
     }
+
+    public static HttpResponse badRequest() {
+        return HttpResponse.builder()
+                .statusCode(400)
+                .reasonPhrase("Bad Request")
+                .body("Bad Request")
+                .build();
+    }
 }

@@ -1,4 +1,4 @@
-package co.schrom.card;
+package co.schrom.battle;
 
 import co.schrom.user.UserInterface;
 

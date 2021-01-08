@@ -152,7 +152,6 @@ public class CardService implements CardServiceInterface {
             ps.setString(4, card.getCardType().toString());
             ps.setNull(5, java.sql.Types.NULL);
             ps.setNull(6, java.sql.Types.NULL);
-            // TODO: Implement behaviour when package or user id is not NULL.
 
             int affectedRows = ps.executeUpdate();
             if (affectedRows == 0) {
