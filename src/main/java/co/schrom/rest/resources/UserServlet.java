@@ -24,7 +24,7 @@ public class UserServlet extends HttpServlet {
 
     public UserServlet() {
         g = new Gson();
-        p = Pattern.compile("/users/(\\d+)/?");
+        p = Pattern.compile("/users/([a-zA-Z]+)/?");
         this.userService = UserService.getInstance();
     }
 
@@ -36,11 +36,16 @@ public class UserServlet extends HttpServlet {
 
         Matcher m = p.matcher(request.getPath());
         if (m.matches()) {
-            int id = Integer.parseInt(m.group(1));
-            if (request.getAuthUser().getId() != id) {
+            String username = m.group(1);
+
+            User user = (User) userService.getUserByUsername(username);
+            if (user == null) {
+                return HttpResponse.notFound();
+            }
+
+            if (request.getAuthUser().getId() != user.getId()) {
                 return HttpResponse.forbidden();
             }
-            User user = (User) userService.getUser(id);
             // Hide password and token in REST response.
             user = user.toBuilder().password(null).token(null).build();
 
@@ -54,6 +59,45 @@ public class UserServlet extends HttpServlet {
             }
         }
         return HttpResponse.notFound();
+    }
+
+    @Override
+    public HttpResponseInterface handlePut(HttpRequestInterface request) {
+        if (request.getAuthUser() == null) {
+            return HttpResponse.unauthorized();
+        }
+
+        Matcher m = p.matcher(request.getPath());
+        if (m.matches()) {
+            String username = m.group(1);
+
+            User user = (User) userService.getUserByUsername(username);
+            if (user == null) {
+                return HttpResponse.notFound();
+            }
+
+            if (request.getAuthUser().getId() != user.getId()) {
+                return HttpResponse.forbidden();
+            }
+
+            User newUser = g.fromJson(request.getBody(), User.class);
+            newUser = newUser.toBuilder()
+                    .coins(user.getCoins())
+                    .username(user.getUsername())
+                    .password(Hashing.sha256().hashString(newUser.getPassword(), StandardCharsets.UTF_8).toString())
+                    .build();
+
+            user = (User) userService.updateUser(user.getId(), newUser);
+            if (user != null) {
+                return HttpResponse.builder()
+                        .headers(new HashMap<>() {{
+                            put("Content-Type", "application/json");
+                        }})
+                        .body(g.toJson(user))
+                        .build();
+            }
+        }
+        return HttpResponse.internalServerError();
     }
 
     @Override
@@ -91,11 +135,17 @@ public class UserServlet extends HttpServlet {
 
         Matcher m = p.matcher(request.getPath());
         if (m.matches()) {
-            int id = Integer.parseInt(m.group(1));
-            if (request.getAuthUser().getId() != id) {
+            String username = m.group(1);
+
+            User user = (User) userService.getUserByUsername(username);
+            if (user == null) {
+                return HttpResponse.notFound();
+            }
+
+            if (request.getAuthUser().getId() != user.getId()) {
                 return HttpResponse.forbidden();
             }
-            boolean result = userService.deleteUser(id);
+            boolean result = userService.deleteUser(user.getId());
             if (result) {
                 return HttpResponse.ok();
             }
