@@ -89,6 +89,7 @@ public class UserServlet extends HttpServlet {
 
             user = (User) userService.updateUser(user.getId(), newUser);
             if (user != null) {
+                user = (User) userService.getUserWithoutSensibleData(user.getId());
                 return HttpResponse.builder()
                         .headers(new HashMap<>() {{
                             put("Content-Type", "application/json");
@@ -115,6 +116,7 @@ public class UserServlet extends HttpServlet {
                             .build());
 
             if (user != null) {
+                user = (User) userService.getUserWithoutSensibleData(user.getId());
                 return HttpResponse.builder()
                         .statusCode(201)
                         .reasonPhrase("Created")
