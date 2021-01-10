@@ -79,3 +79,17 @@ CREATE TABLE battle_rounds
     CONSTRAINT fk_card_b FOREIGN KEY (card_b) REFERENCES cards (id),
     CONSTRAINT fk_winner_card FOREIGN KEY (winner_card) REFERENCES cards (id)
 );
+
+/* Trades */
+
+DROP TABLE IF EXISTS trades CASCADE;
+CREATE TABLE trades
+(
+    id       SERIAL PRIMARY KEY,
+    card_a   INT NOT NULL,
+    card_b   INT,
+    coins    INT     DEFAULT 0,
+    accepted BOOLEAN DEFAULT NULL,
+    CONSTRAINT fk_card_a FOREIGN KEY (card_a) REFERENCES cards (id),
+    CONSTRAINT fk_card_b FOREIGN KEY (card_b) REFERENCES cards (id)
+);
