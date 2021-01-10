@@ -245,6 +245,14 @@ public class BattleService implements BattleServiceInterface {
             this.addBattleRound(battle, cardA, cardB, winnerCard);
         }
 
+        // Transfer cards from current decks to users
+        for (CardInterface card : deckA) {
+            cardService.addCardToUser(card, playerA);
+        }
+        for (CardInterface card : deckB) {
+            cardService.addCardToUser(card, playerB);
+        }
+
         if (winner != null) {
             return this.setWinnerForBattle(winner, battle);
         }
