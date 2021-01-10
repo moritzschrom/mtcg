@@ -49,15 +49,15 @@ CREATE TABLE cards
 
 /* Battle */
 
-DROP TABLE IF EXISTS battle CASCADE;
-CREATE TABLE battle
+DROP TABLE IF EXISTS battles CASCADE;
+CREATE TABLE battles
 (
     id       SERIAL PRIMARY KEY,
-    player_1 INT,
-    player_2 INT,
+    player_a INT,
+    player_b INT,
     winner   INT,
-    CONSTRAINT fk_player_1 FOREIGN KEY (player_1) REFERENCES users (id),
-    CONSTRAINT fk_player_2 FOREIGN KEY (player_2) REFERENCES users (id),
+    CONSTRAINT fk_player_a FOREIGN KEY (player_a) REFERENCES users (id),
+    CONSTRAINT fk_player_b FOREIGN KEY (player_b) REFERENCES users (id),
     CONSTRAINT winner FOREIGN KEY (winner) REFERENCES users (id)
 );
 
@@ -65,10 +65,12 @@ DROP TABLE IF EXISTS battle_rounds CASCADE;
 CREATE TABLE battle_rounds
 (
     id          SERIAL PRIMARY KEY,
-    card_1      INT NOT NULL,
-    card_2      INT NOT NULL,
+    battle_id   INT NOT NULL,
+    card_a      INT NOT NULL,
+    card_b      INT NOT NULL,
     winner_card INT NOT NULL,
-    CONSTRAINT fk_card_1 FOREIGN KEY (card_1) REFERENCES cards (id),
-    CONSTRAINT fk_card_2 FOREIGN KEY (card_2) REFERENCES cards (id),
+    CONSTRAINT fk_battle FOREIGN KEY (battle_id) REFERENCES battles (id),
+    CONSTRAINT fk_card_a FOREIGN KEY (card_a) REFERENCES cards (id),
+    CONSTRAINT fk_card_b FOREIGN KEY (card_b) REFERENCES cards (id),
     CONSTRAINT fk_winner_card FOREIGN KEY (winner_card) REFERENCES cards (id)
 );

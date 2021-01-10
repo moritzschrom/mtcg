@@ -7,7 +7,9 @@ public interface BattleServiceInterface {
 
     boolean createOrAddUserToBattle(UserInterface user);
 
-    boolean addBattle(BattleInterface battle);
+    BattleInterface getBattle(int id);
+
+    BattleInterface addBattle(BattleInterface battle);
 
     boolean addUserToBattle(UserInterface user, BattleInterface battle);
 
