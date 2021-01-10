@@ -23,7 +23,7 @@ public class UserService implements UserServiceInterface {
     public UserInterface getUser(int id) {
         try {
             Connection conn = DatabaseService.getInstance().getConnection();
-            PreparedStatement ps = conn.prepareStatement("SELECT id, username, password, token, coins FROM users WHERE id=?;");
+            PreparedStatement ps = conn.prepareStatement("SELECT id, username, password, token, coins, status FROM users WHERE id=?;");
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
 
@@ -34,6 +34,7 @@ public class UserService implements UserServiceInterface {
                         .password(rs.getString(3))
                         .token(rs.getString(4))
                         .coins(rs.getInt(5))
+                        .status(rs.getString(6))
                         .build();
 
                 rs.close();
@@ -59,7 +60,7 @@ public class UserService implements UserServiceInterface {
     public UserInterface getUserByUsername(String username) {
         try {
             Connection conn = DatabaseService.getInstance().getConnection();
-            PreparedStatement ps = conn.prepareStatement("SELECT id, username, password, token, coins FROM users WHERE username=?;");
+            PreparedStatement ps = conn.prepareStatement("SELECT id, username, password, token, coins, status FROM users WHERE username=?;");
             ps.setString(1, username);
             ResultSet rs = ps.executeQuery();
 
@@ -70,6 +71,7 @@ public class UserService implements UserServiceInterface {
                         .password(rs.getString(3))
                         .token(rs.getString(4))
                         .coins(rs.getInt(5))
+                        .status(rs.getString(6))
                         .build();
 
                 rs.close();
@@ -84,12 +86,19 @@ public class UserService implements UserServiceInterface {
         return null;
     }
 
+    public UserInterface getUserByUsernameWithoutSensibleData(String username) {
+        if (username == null) {
+            return null;
+        }
+        return ((User) this.getUserByUsername(username)).toBuilder().password(null).token(null).build();
+    }
+
     @Override
     public List<UserInterface> getUsers() {
         try {
             Connection conn = DatabaseService.getInstance().getConnection();
             Statement sm = conn.createStatement();
-            ResultSet rs = sm.executeQuery("SELECT id, username, password, token FROM users;");
+            ResultSet rs = sm.executeQuery("SELECT id, username, password, token, coins, status FROM users;");
 
             List<UserInterface> users = new ArrayList<>();
             while (rs.next()) {
@@ -98,6 +107,8 @@ public class UserService implements UserServiceInterface {
                         .username(rs.getString(2))
                         .password(rs.getString(3))
                         .token(rs.getString(4))
+                        .coins(rs.getInt(5))
+                        .status(rs.getString(6))
                         .build());
             }
 
@@ -116,11 +127,12 @@ public class UserService implements UserServiceInterface {
     public UserInterface addUser(UserInterface user) {
         try {
             Connection conn = DatabaseService.getInstance().getConnection();
-            PreparedStatement ps = conn.prepareStatement("INSERT INTO users(username, password, token, coins) VALUES(?,?,?,?);", Statement.RETURN_GENERATED_KEYS);
+            PreparedStatement ps = conn.prepareStatement("INSERT INTO users(username, password, token, coins, status) VALUES(?,?,?,?,?);", Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, user.getUsername());
             ps.setString(2, user.getPassword());
             ps.setString(3, user.getToken());
             ps.setInt(4, user.getCoins());
+            ps.setString(5, user.getStatus());
 
             int affectedRows = ps.executeUpdate();
             if (affectedRows == 0) {
@@ -145,13 +157,14 @@ public class UserService implements UserServiceInterface {
         User oldUser = (User) this.getUser(id);
         try {
             Connection conn = DatabaseService.getInstance().getConnection();
-            PreparedStatement ps = conn.prepareStatement("UPDATE users SET username = ?, password = ?, token = ?, coins = ? WHERE id = ?;");
+            PreparedStatement ps = conn.prepareStatement("UPDATE users SET username = ?, password = ?, token = ?, coins = ?, status = ? WHERE id = ?;");
 
             ps.setString(1, user.getUsername() != null ? user.getUsername() : oldUser.getUsername());
             ps.setString(2, user.getPassword() != null ? user.getPassword() : oldUser.getPassword());
             ps.setString(3, user.getToken() != null ? user.getToken() : oldUser.getToken());
             ps.setInt(4, user.getCoins());
-            ps.setInt(5, id);
+            ps.setString(5, user.getStatus() != null ? user.getStatus() : oldUser.getStatus());
+            ps.setInt(6, id);
 
             int affectedRows = ps.executeUpdate();
 

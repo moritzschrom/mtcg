@@ -38,7 +38,7 @@ public class UserServlet extends HttpServlet {
         if (m.matches()) {
             String username = m.group(1);
 
-            User user = (User) userService.getUserByUsername(username);
+            User user = (User) userService.getUserByUsernameWithoutSensibleData(username);
             if (user == null) {
                 return HttpResponse.notFound();
             }

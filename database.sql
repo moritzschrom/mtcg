@@ -14,6 +14,7 @@ CREATE TABLE users
 (
     id            SERIAL PRIMARY KEY,
     username      VARCHAR(255) NOT NULL,
+    status        VARCHAR(255),
     password      VARCHAR(255) NOT NULL,
     token         VARCHAR(255) NULL,
     coins         INT          NOT NULL DEFAULT 20,

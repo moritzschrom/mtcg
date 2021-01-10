@@ -14,6 +14,9 @@ public class User implements UserInterface {
     int id;
 
     @Getter
+    String status;
+
+    @Getter
     String username;
 
     @Getter
