@@ -242,9 +242,7 @@ public class BattleService implements BattleServiceInterface {
             cardB = deckB.get(new Random().nextInt(deckB.size()));
             winnerCard = null;
 
-            System.out.println("Round " + i + ": " + cardA.getName() + "(" + cardA.getDamage() + ") vs. " + cardB.getName() + "(" + cardB.getDamage() + ")");
-
-            if (cardA.winsAgainst(cardB) || cardA.getDamage() > cardB.getDamage()) {
+            if (cardA.winsAgainst(cardB) || cardA.calculateDamage(cardB) > cardB.calculateDamage(cardA)) {
                 // Player A wins this round, and gets cardB
                 winnerCard = cardA;
                 deckB.remove(cardB);

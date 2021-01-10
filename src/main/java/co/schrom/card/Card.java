@@ -57,6 +57,7 @@ public abstract class Card implements CardInterface {
         if (CardType.MONSTER.equals(this.getCardType()) && CardType.SPELL.equals(card.getCardType())) {
 
             // Kraken defeat all Spells
+            //noinspection RedundantIfStatement
             if ("Kraken".equals(this.getName())) {
                 return true;
             }
@@ -64,6 +65,32 @@ public abstract class Card implements CardInterface {
         }
 
         return false;
+    }
+
+    @Override
+    public float calculateDamage(CardInterface card) {
+        // Effectiveness only relevant for spell cards
+        if (CardType.SPELL.equals(this.getCardType())) {
+            // Effective (double damage)
+            if ((ElementType.WATER.equals(this.getElementType()) && ElementType.FIRE.equals(card.getElementType())) ||
+                    (ElementType.FIRE.equals(this.getElementType()) && ElementType.NORMAL.equals(card.getElementType())) ||
+                    (ElementType.NORMAL.equals(this.getElementType()) && ElementType.WATER.equals(card.getElementType()))) {
+                System.out.println(2 * this.getDamage());
+                return 2 * this.getDamage();
+            }
+
+            // Not Effective
+            if ((ElementType.FIRE.equals(this.getElementType()) && ElementType.WATER.equals(card.getElementType())) ||
+                    (ElementType.NORMAL.equals(this.getElementType()) && ElementType.FIRE.equals(card.getElementType())) ||
+                    (ElementType.WATER.equals(this.getElementType()) && ElementType.NORMAL.equals(card.getElementType()))) {
+                System.out.println(this.getDamage() / 2);
+                return this.getDamage() / 2;
+            }
+        }
+
+        // No Effect
+        System.out.println(this.getDamage());
+        return this.getDamage();
     }
 
     public static CardInterface fromPrimitives(int id, String name, float damage, String cardTypeString, String elementTypeString, boolean locked) {

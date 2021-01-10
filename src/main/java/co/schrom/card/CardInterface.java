@@ -7,6 +7,8 @@ public interface CardInterface {
 
     float getDamage();
 
+    float calculateDamage(CardInterface card);
+
     CardType getCardType();
 
     ElementType getElementType();
