@@ -51,6 +51,8 @@ public class RequestContext implements RequestContextInterface {
 
                 put("^GET /stats/?$", StatsServlet.class.getDeclaredMethod("handleIndex", HttpRequestInterface.class));
 
+                put("^GET /score/?$", ScoreboardServlet.class.getDeclaredMethod("handleIndex", HttpRequestInterface.class));
+
                 put("^POST /battles/?$", BattleServlet.class.getDeclaredMethod("handlePost", HttpRequestInterface.class));
             } catch (NoSuchMethodException e) {
                 e.printStackTrace();

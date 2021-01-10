@@ -2,17 +2,18 @@ package co.schrom.stats;
 
 import co.schrom.database.DatabaseService;
 import co.schrom.user.UserInterface;
+import co.schrom.user.UserService;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 
 public class StatsService implements StatsServiceInterface {
     private static StatsService instance;
+    private final UserService userService;
 
     private StatsService() {
-
+        userService = UserService.getInstance();
     }
 
     public static StatsService getInstance() {
@@ -127,5 +128,36 @@ public class StatsService implements StatsServiceInterface {
         }
 
         return false;
+    }
+
+    @Override
+    public JsonArray getScoreboard() {
+        try {
+            Connection conn = DatabaseService.getInstance().getConnection();
+            Statement sm = conn.createStatement();
+            ResultSet rs = sm.executeQuery("SELECT username, elo, total_battles, won_battles, lost_battles FROM users ORDER BY elo DESC;");
+
+            JsonArray jsonArray = new JsonArray();
+
+            while (rs.next()) {
+                JsonObject innerJsonObject = new JsonObject();
+                innerJsonObject.addProperty("username", rs.getString(1));
+                innerJsonObject.addProperty("elo", rs.getInt(2));
+                innerJsonObject.addProperty("total_battles", rs.getInt(3));
+                innerJsonObject.addProperty("won_battles", rs.getInt(4));
+                innerJsonObject.addProperty("lost_battles", rs.getInt(5));
+
+                jsonArray.add(innerJsonObject);
+            }
+
+            rs.close();
+            sm.close();
+            conn.close();
+
+            return jsonArray;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }
