@@ -3,6 +3,7 @@ package co.schrom.battle;
 import co.schrom.card.CardInterface;
 import co.schrom.card.CardService;
 import co.schrom.database.DatabaseService;
+import co.schrom.stats.StatsService;
 import co.schrom.user.User;
 import co.schrom.user.UserInterface;
 import co.schrom.user.UserService;
@@ -17,11 +18,13 @@ public class BattleService implements BattleServiceInterface {
     private final UserService userService;
     private final DeckService deckService;
     private final CardService cardService;
+    private final StatsService statsService;
 
     private BattleService() {
         userService = UserService.getInstance();
         deckService = DeckService.getInstance();
         cardService = CardService.getInstance();
+        statsService = StatsService.getInstance();
     }
 
     public static BattleService getInstance() {
@@ -211,11 +214,17 @@ public class BattleService implements BattleServiceInterface {
             if (deckA.size() == 0) {
                 // Deck A is empty, therefore player B won.
                 winner = playerB;
+                // Update stats
+                statsService.addStatForUser(playerB, 1);
+                statsService.addStatForUser(playerA, -1);
                 System.out.println("Player A won.");
                 break;
             } else if (deckB.size() == 0) {
                 // Deck B is empty, therefore player A won.
                 winner = playerA;
+                // Update stats
+                statsService.addStatForUser(playerA, 1);
+                statsService.addStatForUser(playerB, -1);
                 System.out.println("Player B won.");
                 break;
             }
@@ -253,11 +262,13 @@ public class BattleService implements BattleServiceInterface {
             cardService.addCardToUser(card, playerB);
         }
 
-        if (winner != null) {
-            return this.setWinnerForBattle(winner, battle);
+        // Update stats
+        if (winner == null) {
+            statsService.addStatForUser(playerA, 0);
+            statsService.addStatForUser(playerB, 0);
         }
 
-        return false;
+        return this.setWinnerForBattle(winner, battle);
     }
 
     @Override
