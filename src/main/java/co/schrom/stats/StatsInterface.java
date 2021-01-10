@@ -6,4 +6,6 @@ public interface StatsInterface {
     int getWonBattles();
 
     int getLostBattles();
+
+    int getElo();
 }

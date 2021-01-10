@@ -217,6 +217,8 @@ public class BattleService implements BattleServiceInterface {
                 // Update stats
                 statsService.addStatForUser(playerB, 1);
                 statsService.addStatForUser(playerA, -1);
+                // Update elo
+                statsService.updateEloForPlayers(playerA, playerB, 0.0, 1.0);
                 System.out.println("Player A won.");
                 break;
             } else if (deckB.size() == 0) {
@@ -225,6 +227,8 @@ public class BattleService implements BattleServiceInterface {
                 // Update stats
                 statsService.addStatForUser(playerA, 1);
                 statsService.addStatForUser(playerB, -1);
+                // Update elo
+                statsService.updateEloForPlayers(playerA, playerB, 1.0, 0.0);
                 System.out.println("Player B won.");
                 break;
             }
@@ -262,10 +266,11 @@ public class BattleService implements BattleServiceInterface {
             cardService.addCardToUser(card, playerB);
         }
 
-        // Update stats
+        // Update stats, tie
         if (winner == null) {
             statsService.addStatForUser(playerA, 0);
             statsService.addStatForUser(playerB, 0);
+            statsService.updateEloForPlayers(playerA, playerB, 0.5, 0.5);
         }
 
         return this.setWinnerForBattle(winner, battle);

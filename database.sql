@@ -20,6 +20,7 @@ CREATE TABLE users
     total_battles INT                   DEFAULT 0,
     won_battles   INT                   DEFAULT 0,
     lost_battles  INT                   DEFAULT 0,
+    elo           INT                   DEFAULT 1000,
     UNIQUE (username)
 );
 

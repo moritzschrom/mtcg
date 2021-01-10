@@ -13,4 +13,7 @@ public class Stats implements StatsInterface {
 
     @Getter
     int lostBattles;
+
+    @Getter
+    int elo;
 }
