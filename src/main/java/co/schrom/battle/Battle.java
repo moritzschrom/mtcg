@@ -4,10 +4,15 @@ import co.schrom.user.UserInterface;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.util.List;
+
 @Builder
 public class Battle implements BattleInterface {
     @Getter
     int id;
+
+    @Getter
+    boolean finished;
 
     @Getter
     UserInterface playerA;
@@ -19,7 +24,7 @@ public class Battle implements BattleInterface {
     UserInterface winner;
 
     @Getter
-    UserInterface looser;
+    List<BattleRoundInterface> battleRounds;
 
     @Override
     public void startBattle() {

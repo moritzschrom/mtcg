@@ -191,7 +191,6 @@ public class BattleServiceTest {
             assertTrue(rs.next());
             assertEquals(playerA.getId(), rs.getInt(2));
             assertEquals(playerB.getId(), rs.getInt(3));
-            assertEquals(0, rs.getInt(4));
 
             // cleanup
             Statement sm = conn.createStatement();

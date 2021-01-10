@@ -23,7 +23,7 @@ public class UserService implements UserServiceInterface {
     public UserInterface getUser(int id) {
         try {
             Connection conn = DatabaseService.getInstance().getConnection();
-            PreparedStatement ps = conn.prepareStatement("SELECT id, username, password, token FROM users WHERE id=?;");
+            PreparedStatement ps = conn.prepareStatement("SELECT id, username, password, token, coins FROM users WHERE id=?;");
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
 
@@ -33,6 +33,7 @@ public class UserService implements UserServiceInterface {
                         .username(rs.getString(2))
                         .password(rs.getString(3))
                         .token(rs.getString(4))
+                        .coins(rs.getInt(5))
                         .build();
 
                 rs.close();
@@ -45,6 +46,13 @@ public class UserService implements UserServiceInterface {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public UserInterface getUserWithoutSensibleData(int id) {
+        if (id == 0) {
+            return null;
+        }
+        return ((User) this.getUser(id)).toBuilder().password(null).token(null).build();
     }
 
     @Override

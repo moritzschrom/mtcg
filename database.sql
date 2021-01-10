@@ -56,6 +56,7 @@ CREATE TABLE battles
     player_a INT,
     player_b INT,
     winner   INT,
+    finished BOOLEAN DEFAULT FALSE,
     CONSTRAINT fk_player_a FOREIGN KEY (player_a) REFERENCES users (id),
     CONSTRAINT fk_player_b FOREIGN KEY (player_b) REFERENCES users (id),
     CONSTRAINT winner FOREIGN KEY (winner) REFERENCES users (id)
@@ -68,7 +69,7 @@ CREATE TABLE battle_rounds
     battle_id   INT NOT NULL,
     card_a      INT NOT NULL,
     card_b      INT NOT NULL,
-    winner_card INT NOT NULL,
+    winner_card INT,
     CONSTRAINT fk_battle FOREIGN KEY (battle_id) REFERENCES battles (id),
     CONSTRAINT fk_card_a FOREIGN KEY (card_a) REFERENCES cards (id),
     CONSTRAINT fk_card_b FOREIGN KEY (card_b) REFERENCES cards (id),

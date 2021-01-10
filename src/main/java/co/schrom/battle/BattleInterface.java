@@ -2,8 +2,12 @@ package co.schrom.battle;
 
 import co.schrom.user.UserInterface;
 
+import java.util.List;
+
 public interface BattleInterface {
     int getId();
+
+    boolean isFinished();
 
     UserInterface getPlayerA();
 
@@ -11,7 +15,7 @@ public interface BattleInterface {
 
     UserInterface getWinner();
 
-    UserInterface getLooser();
-
     void startBattle();
+
+    List<BattleRoundInterface> getBattleRounds();
 }

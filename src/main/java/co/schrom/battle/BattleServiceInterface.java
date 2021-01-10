@@ -5,7 +5,7 @@ import co.schrom.user.UserInterface;
 
 public interface BattleServiceInterface {
 
-    boolean createOrAddUserToBattle(UserInterface user);
+    BattleInterface createOrAddUserToBattle(UserInterface user);
 
     BattleInterface getBattle(int id);
 
@@ -13,7 +13,11 @@ public interface BattleServiceInterface {
 
     boolean addUserToBattle(UserInterface user, BattleInterface battle);
 
-    boolean addBattleRound(BattleInterface battle, CardInterface card1, CardInterface card2);
+    boolean addBattleRound(BattleInterface battle, CardInterface card1, CardInterface card2, CardInterface winnerCard);
 
     boolean setWinnerForBattle(UserInterface winner, BattleInterface battle);
+
+    BattleInterface waitForBattleToFinish(BattleInterface battle);
+
+    boolean battle(BattleInterface battle);
 }

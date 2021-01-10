@@ -48,6 +48,8 @@ public class RequestContext implements RequestContextInterface {
 
                 put("^GET /deck/?$", DeckServlet.class.getDeclaredMethod("handleIndex", HttpRequestInterface.class));
                 put("^PUT /deck/?$", DeckServlet.class.getDeclaredMethod("handlePut", HttpRequestInterface.class));
+
+                put("^POST /battles/?$", BattleServlet.class.getDeclaredMethod("handlePost", HttpRequestInterface.class));
             } catch (NoSuchMethodException e) {
                 e.printStackTrace();
             }
