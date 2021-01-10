@@ -90,35 +90,52 @@ public class TradeService implements TradeServiceInterface {
 
     @Override
     public TradeInterface addTrade(CardInterface card) {
-        try {
-            Connection conn = DatabaseService.getInstance().getConnection();
-            PreparedStatement ps = conn.prepareStatement("INSERT INTO trades(card_a) VALUES(?);", Statement.RETURN_GENERATED_KEYS);
-            ps.setInt(1, card.getId());
+        if (!card.isLocked()) {
+            try {
+                Connection conn = DatabaseService.getInstance().getConnection();
+                PreparedStatement ps = conn.prepareStatement("INSERT INTO trades(card_a) VALUES(?);", Statement.RETURN_GENERATED_KEYS);
+                ps.setInt(1, card.getId());
 
-            int affectedRows = ps.executeUpdate();
-            if (affectedRows == 0) {
-                return null;
-            }
-
-            try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
-                if (generatedKeys.next()) {
-                    int id = generatedKeys.getInt(1);
-                    ps.close();
-                    conn.close();
-
-                    return this.getTrade(id);
+                int affectedRows = ps.executeUpdate();
+                if (affectedRows == 0) {
+                    return null;
                 }
+
+                try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
+                    if (generatedKeys.next()) {
+                        int id = generatedKeys.getInt(1);
+                        ps.close();
+                        conn.close();
+
+                        cardService.lockCard(card, true);
+
+                        return this.getTrade(id);
+                    }
+                }
+                ps.close();
+                conn.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
             }
-            ps.close();
-            conn.close();
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
         }
         return null;
     }
 
     @Override
     public boolean deleteTrade(int id) {
+        // Unlock cards
+        Trade trade = (Trade) this.getTrade(id);
+        if (trade != null) {
+            CardInterface cardA = trade.getCardA();
+            if (cardA != null) {
+                cardService.lockCard(cardA, false);
+            }
+            CardInterface cardB = trade.getCardB();
+            if (cardB != null) {
+                cardService.lockCard(cardB, false);
+            }
+        }
+
         try {
             Connection conn = DatabaseService.getInstance().getConnection();
             PreparedStatement ps = conn.prepareStatement("DELETE FROM trades WHERE id = ?;");
@@ -138,23 +155,25 @@ public class TradeService implements TradeServiceInterface {
 
     @Override
     public TradeInterface addOffer(TradeInterface trade, CardInterface card, int coins) {
-        try {
-            Connection conn = DatabaseService.getInstance().getConnection();
-            PreparedStatement ps = conn.prepareStatement("UPDATE trades SET card_b = ?, coins = ? WHERE id = ?;");
-            ps.setInt(1, card.getId());
-            ps.setInt(2, coins);
-            ps.setInt(3, trade.getId());
+        if (!card.isLocked()) {
+            try {
+                Connection conn = DatabaseService.getInstance().getConnection();
+                PreparedStatement ps = conn.prepareStatement("UPDATE trades SET card_b = ?, coins = ? WHERE id = ?;");
+                ps.setInt(1, card.getId());
+                ps.setInt(2, coins);
+                ps.setInt(3, trade.getId());
 
-            int affectedRows = ps.executeUpdate();
+                int affectedRows = ps.executeUpdate();
 
-            ps.close();
-            conn.close();
+                ps.close();
+                conn.close();
 
-            if (affectedRows > 0) {
-                return this.getTrade(trade.getId());
+                if (affectedRows > 0) {
+                    return this.getTrade(trade.getId());
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
         return null;
     }
@@ -173,6 +192,8 @@ public class TradeService implements TradeServiceInterface {
 
                 cardService.addCardToUser(trade.getCardB(), userA);
                 cardService.addCardToUser(trade.getCardA(), userB);
+                cardService.lockCard(trade.getCardB(), false);
+                cardService.lockCard(trade.getCardA(), false);
 
                 ps = conn.prepareStatement("UPDATE trades SET accepted = TRUE WHERE id=?;");
                 ps.setInt(1, trade.getId());

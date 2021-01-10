@@ -48,6 +48,7 @@ CREATE TABLE cards
     package_id   INT,
     user_id      INT,
     in_deck      BOOLEAN DEFAULT FALSE,
+    is_locked    BOOLEAN DEFAULT FALSE,
     CONSTRAINT fk_package FOREIGN KEY (package_id) REFERENCES packages (id),
     CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES users (id)
 );

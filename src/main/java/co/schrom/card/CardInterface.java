@@ -11,5 +11,7 @@ public interface CardInterface {
 
     ElementType getElementType();
 
+    boolean isLocked();
+
     boolean winsAgainst(CardInterface card);
 }

@@ -34,7 +34,7 @@ public class DeckService implements DeckServiceInterface {
     public List<CardInterface> getDeck(UserInterface user) {
         try {
             Connection conn = DatabaseService.getInstance().getConnection();
-            PreparedStatement ps = conn.prepareStatement("SELECT id, name, damage, card_type, element_type FROM cards WHERE user_id = ? AND in_deck;");
+            PreparedStatement ps = conn.prepareStatement("SELECT id, name, damage, card_type, element_type, is_locked FROM cards WHERE user_id = ? AND in_deck;");
             ps.setInt(1, user.getId());
             ResultSet rs = ps.executeQuery();
 
@@ -45,7 +45,8 @@ public class DeckService implements DeckServiceInterface {
                         rs.getString(2), // name
                         rs.getFloat(3), // damage
                         rs.getString(4), // card_type
-                        rs.getString(5))); // element_type
+                        rs.getString(5), // element_type
+                        rs.getBoolean(6))); // is_locked
             }
 
             rs.close();
@@ -93,6 +94,10 @@ public class DeckService implements DeckServiceInterface {
 
     @Override
     public boolean addCardToDeck(CardInterface card, UserInterface user) {
+        if (card.isLocked()) {
+            return false;
+        }
+
         try {
             Connection conn = DatabaseService.getInstance().getConnection();
             PreparedStatement ps = conn.prepareStatement("SELECT COUNT(id) FROM  cards WHERE user_id = ? AND in_deck;");

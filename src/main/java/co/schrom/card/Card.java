@@ -19,6 +19,9 @@ public abstract class Card implements CardInterface {
     @Getter
     ElementType elementType;
 
+    @Getter
+    boolean locked;
+
     @Override
     public boolean winsAgainst(CardInterface card) {
 
@@ -63,7 +66,7 @@ public abstract class Card implements CardInterface {
         return false;
     }
 
-    public static CardInterface fromPrimitives(int id, String name, float damage, String cardTypeString, String elementTypeString) {
+    public static CardInterface fromPrimitives(int id, String name, float damage, String cardTypeString, String elementTypeString, boolean locked) {
         CardType cardType;
         ElementType elementType;
         CardInterface card;

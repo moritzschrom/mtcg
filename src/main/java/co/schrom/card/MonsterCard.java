@@ -10,8 +10,8 @@ public class MonsterCard extends Card {
     CardType cardType = CardType.MONSTER;
 
     @Builder
-    public MonsterCard(int id, String name, float damage, ElementType elementType) {
-        super(id, name, damage, elementType);
+    public MonsterCard(int id, String name, float damage, ElementType elementType, boolean locked) {
+        super(id, name, damage, elementType, locked);
         this.cardType = CardType.MONSTER;
     }
 }

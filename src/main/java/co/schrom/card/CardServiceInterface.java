@@ -19,5 +19,7 @@ public interface CardServiceInterface {
 
     CardInterface addCardToUser(CardInterface card, UserInterface user);
 
+    CardInterface lockCard(CardInterface card, boolean isLocked);
+
     boolean deleteCard(int id);
 }

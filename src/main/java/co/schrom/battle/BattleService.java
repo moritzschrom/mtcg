@@ -203,6 +203,11 @@ public class BattleService implements BattleServiceInterface {
         ArrayList<CardInterface> deckA = (ArrayList<CardInterface>) deckService.getDeck(playerA);
         ArrayList<CardInterface> deckB = (ArrayList<CardInterface>) deckService.getDeck(playerB);
 
+        // Check if decks are complete
+        if (deckA.size() != 4 || deckB.size() != 4) {
+            return false;
+        }
+
         CardInterface cardA;
         CardInterface cardB;
         CardInterface winnerCard;
@@ -265,6 +270,10 @@ public class BattleService implements BattleServiceInterface {
         for (CardInterface card : deckB) {
             cardService.addCardToUser(card, playerB);
         }
+
+        // Clear deck
+        deckService.clearDeck(playerA);
+        deckService.clearDeck(playerB);
 
         // Update stats, tie
         if (winner == null) {
